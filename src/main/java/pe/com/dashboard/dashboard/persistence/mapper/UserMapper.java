@@ -30,4 +30,5 @@ public interface UserMapper {
     // @Mapping(target = "#", ignore = true)
     UsuarioEntity toUser(UsuarioDTO user);
 
+
 }

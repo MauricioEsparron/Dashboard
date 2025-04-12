@@ -33,17 +33,6 @@ CREATE TABLE usuario (
 
 
 
-CREATE TABLE comentario (
-    id_comentario INT AUTO_INCREMENT PRIMARY KEY,
-    descripcion TEXT NOT NULL,
-    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
-    id_usuario INT NOT NULL,
-    id_avance INT, -- si lo relacionas con un avance de tesis
-    estado INT,
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
-);
-
-
 CREATE TABLE avance_tesis (
     id_avance_tesis INT AUTO_INCREMENT PRIMARY KEY,
     id_estudiante INT NOT NULL,
@@ -53,6 +42,17 @@ CREATE TABLE avance_tesis (
     fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
     estado_revision ENUM('pendiente', 'revisado', 'observado') DEFAULT 'pendiente',
     FOREIGN KEY (id_estudiante) REFERENCES usuario(id_usuario)
+);
+
+CREATE TABLE comentario (
+    id_comentario INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion TEXT NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    id_usuario INT NOT NULL,
+    id_avance INT, -- si lo relacionas con un avance de tesis
+    estado INT,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+    FOREIGN KEY (id_avance) REFERENCES avance_tesis(id_avance_tesis);
 );
 
 CREATE TABLE alerta (

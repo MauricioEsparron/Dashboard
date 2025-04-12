@@ -10,7 +10,7 @@ import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-11T21:00:36-0500",
+    date = "2025-04-12T00:28:02-0500",
     comments = "version: 1.6.3, compiler: Eclipse JDT (IDE) 3.42.0.z20250331-1358, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
@@ -61,17 +61,17 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        UsuarioEntity usuarioEntity = new UsuarioEntity();
+        UsuarioEntity.UsuarioEntityBuilder usuarioEntity = UsuarioEntity.builder();
 
-        usuarioEntity.setIdUsuario( user.getUserId() );
-        usuarioEntity.setUsername( user.getUsername() );
-        usuarioEntity.setContrasenia( user.getPassword() );
-        usuarioEntity.setPersona( personMapper.toPersona( user.getPerson() ) );
-        usuarioEntity.setIdPersona( user.getPersonId() );
-        usuarioEntity.setTipoUsuario( userTypeMapper.toTipoUsuario( user.getUserType() ) );
-        usuarioEntity.setIdTipoUsuario( user.getUserTypeId() );
-        usuarioEntity.setEstado( user.getActive() );
+        usuarioEntity.idUsuario( user.getUserId() );
+        usuarioEntity.username( user.getUsername() );
+        usuarioEntity.contrasenia( user.getPassword() );
+        usuarioEntity.persona( personMapper.toPersona( user.getPerson() ) );
+        usuarioEntity.idPersona( user.getPersonId() );
+        usuarioEntity.tipoUsuario( userTypeMapper.toTipoUsuario( user.getUserType() ) );
+        usuarioEntity.idTipoUsuario( user.getUserTypeId() );
+        usuarioEntity.estado( user.getActive() );
 
-        return usuarioEntity;
+        return usuarioEntity.build();
     }
 }
