@@ -3,6 +3,7 @@ package pe.com.dashboard.dashboard.domain.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +17,9 @@ import pe.com.dashboard.dashboard.persistence.repository.ComentarioRepository;
 @RequiredArgsConstructor
 public class ComentarioServiceImpl implements ComentarioService {
     
+    @Autowired
     private final CommentMapper mapper;
+    @Autowired
     private final ComentarioRepository comentarioRepository;
 
     @Override

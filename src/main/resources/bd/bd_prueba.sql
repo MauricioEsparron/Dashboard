@@ -52,7 +52,6 @@ CREATE TABLE comentario (
     id_avance INT, -- si lo relacionas con un avance de tesis
     estado INT,
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
-    FOREIGN KEY (id_avance) REFERENCES avance_tesis(id_avance_tesis);
 );
 
 CREATE TABLE alerta (

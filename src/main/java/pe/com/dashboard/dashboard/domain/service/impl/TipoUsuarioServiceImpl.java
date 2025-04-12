@@ -3,6 +3,7 @@ package pe.com.dashboard.dashboard.domain.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,10 @@ import pe.com.dashboard.dashboard.persistence.mapper.UserTypeMapper;
 @RequiredArgsConstructor
 public class TipoUsuarioServiceImpl implements TipoUsuarioService {
 
+    @Autowired
     private final TipoUsuarioRepository tipoUsuarioRepository;
+    
+    @Autowired
     private final UserTypeMapper userTypeMapper;
 
     @Override
