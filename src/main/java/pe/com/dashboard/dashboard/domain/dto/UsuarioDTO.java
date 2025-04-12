@@ -11,7 +11,7 @@ public class UsuarioDTO {
     private String password;
     private Integer personId;
     private Integer userTypeId;
-    private boolean active;
+    private Integer active;
     private PersonaDTO person;
     private TipoUsuarioDTO userType;
 

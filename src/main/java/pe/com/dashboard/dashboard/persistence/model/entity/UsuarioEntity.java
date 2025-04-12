@@ -46,6 +46,6 @@ public class UsuarioEntity {
     private Integer idTipoUsuario;
 
     @Column(nullable = false)
-    private Boolean estado;
+    private Integer estado;
 
 }

@@ -10,7 +10,7 @@ import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-11T10:05:19-0500",
+    date = "2025-04-11T21:00:36-0500",
     comments = "version: 1.6.3, compiler: Eclipse JDT (IDE) 3.42.0.z20250331-1358, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
@@ -36,9 +36,7 @@ public class UserMapperImpl implements UserMapper {
         usuarioDTO.setPersonId( usuario.getIdPersona() );
         usuarioDTO.setUserType( userTypeMapper.toUserTyper( usuario.getTipoUsuario() ) );
         usuarioDTO.setUserTypeId( usuario.getIdTipoUsuario() );
-        if ( usuario.getEstado() != null ) {
-            usuarioDTO.setActive( usuario.getEstado() );
-        }
+        usuarioDTO.setActive( usuario.getEstado() );
 
         return usuarioDTO;
     }
@@ -72,7 +70,7 @@ public class UserMapperImpl implements UserMapper {
         usuarioEntity.setIdPersona( user.getPersonId() );
         usuarioEntity.setTipoUsuario( userTypeMapper.toTipoUsuario( user.getUserType() ) );
         usuarioEntity.setIdTipoUsuario( user.getUserTypeId() );
-        usuarioEntity.setEstado( user.isActive() );
+        usuarioEntity.setEstado( user.getActive() );
 
         return usuarioEntity;
     }

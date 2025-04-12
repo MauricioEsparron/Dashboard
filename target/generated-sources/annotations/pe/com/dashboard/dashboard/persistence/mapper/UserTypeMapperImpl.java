@@ -9,7 +9,7 @@ import pe.com.dashboard.dashboard.persistence.model.entity.TipoUsuarioEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-11T10:05:19-0500",
+    date = "2025-04-11T21:00:28-0500",
     comments = "version: 1.6.3, compiler: Eclipse JDT (IDE) 3.42.0.z20250331-1358, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
