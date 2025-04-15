@@ -3,6 +3,7 @@ package pe.com.dashboard.dashboard.domain.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +17,9 @@ import pe.com.dashboard.dashboard.persistence.repository.UsuarioRepository;
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
+    @Autowired
     private final UsuarioRepository usuarioRepository;
+    @Autowired
     private final UserMapper userMapper;
 
     @Override
@@ -26,14 +29,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Optional<UsuarioDTO> findUserById(int userId) {
-        return usuarioRepository.findById(userId)
-                .map(userMapper::toUser);
+    public Optional<UsuarioEntity> findUserById(int userId) {
+        return usuarioRepository.findById(userId);
     }
 
     @Override
     public List<UsuarioDTO> findByState(boolean estado) {
-        // Convertimos estado booleano a 1/0 (asumiendo que así lo manejas en la BD)
         int estadoInt = estado ? 1 : 0;
         return userMapper.toUsers(usuarioRepository.findByEstado(estadoInt));
     }
