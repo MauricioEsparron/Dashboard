@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pe.com.dashboard.dashboard.domain.dto.AlertaDTO;
-import pe.com.dashboard.dashboard.domain.dto.UsuarioDTO;
 import pe.com.dashboard.dashboard.domain.service.AlertService;
 import pe.com.dashboard.dashboard.domain.service.UsuarioService;
 import pe.com.dashboard.dashboard.persistence.mapper.AlertMapper;
@@ -42,7 +41,7 @@ public class AlertServiceImpl implements AlertService {
     public AlertaDTO save(AlertaDTO alertaDTO) {
 
         AlertaEntity alertaEntity = alertMapper.toAlertEntity(alertaDTO);
-        
+
         if (alertaEntity.getDate() == null) {
             alertaEntity.setDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)); // Fecha sin milisegundos
         }
