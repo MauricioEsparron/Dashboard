@@ -27,9 +27,9 @@ public class UsuarioEntity {
     @JoinColumn(name = "id_persona")
     private PersonaEntity persona;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipo_usuario")
-    private TipoUsuarioEntity tipoUsuario;
+    private TipoUsuarioEntity tipoUsuario;    
 
     @Column(nullable = false)
     private Integer estado;
