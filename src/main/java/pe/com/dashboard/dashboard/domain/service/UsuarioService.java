@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import pe.com.dashboard.dashboard.domain.dto.UsuarioDTO;
+import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 
 public interface UsuarioService {
 
 List<UsuarioDTO> findAllUsers();
 
-Optional<UsuarioDTO> findUserById(int userId);
+Optional<UsuarioEntity> findUserById(int userId);
 
 List<UsuarioDTO> findByState(int estado);
 

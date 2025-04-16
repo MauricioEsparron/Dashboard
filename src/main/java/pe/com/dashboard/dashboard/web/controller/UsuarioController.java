@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.dashboard.dashboard.domain.dto.UsuarioDTO;
 import pe.com.dashboard.dashboard.domain.service.UsuarioService;
+import pe.com.dashboard.dashboard.persistence.mapper.UserMapper;
+import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,9 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> findAllUsers() {
         List<UsuarioDTO> users = usuarioService.findAllUsers();
@@ -25,9 +30,11 @@ public class UsuarioController {
 
     @GetMapping("/id/{userId}")
     public ResponseEntity<UsuarioDTO> findUserById(@PathVariable("userId") int userId) {
-        Optional<UsuarioDTO> user = usuarioService.findUserById(userId);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK); // 200 OK
+        Optional<UsuarioEntity> userEntity = usuarioService.findUserById(userId);
+
+        if (userEntity.isPresent()) {
+            UsuarioDTO userDTO = userMapper.toUser(userEntity.get()); 
+            return new ResponseEntity<>(userDTO, HttpStatus.OK); // 200 OK
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
         }
@@ -39,29 +46,27 @@ public class UsuarioController {
         return new ResponseEntity<>(users, HttpStatus.OK); // 200 OK
     }
 
-    
     @GetMapping("/type/{userType}")
     public ResponseEntity<List<UsuarioDTO>> findTypeUser(@PathVariable("userType") int userType) {
         List<UsuarioDTO> users = usuarioService.findTypeUser(userType);
         return new ResponseEntity<>(users, HttpStatus.OK); // 200 OK
     }
 
-
     @PostMapping("/create")
     public ResponseEntity<UsuarioDTO> createUser(@RequestBody UsuarioDTO user) {
         UsuarioDTO createdUser = usuarioService.createUser(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED); 
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<Void> updateUser(@PathVariable("userId") int userId, @RequestBody UsuarioDTO user) {
         usuarioService.updateUser(userId, user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable("userId") int userId) {
         usuarioService.deleteUser(userId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

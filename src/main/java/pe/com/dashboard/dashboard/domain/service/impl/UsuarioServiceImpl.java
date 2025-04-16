@@ -22,7 +22,9 @@ import pe.com.dashboard.dashboard.persistence.repository.UsuarioRepository;
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
+    @Autowired
     private final UsuarioRepository usuarioRepository;
+    @Autowired
     private final UserMapper userMapper;
 
     @Autowired
@@ -42,9 +44,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Optional<UsuarioDTO> findUserById(int userId) {
-        return usuarioRepository.findById(userId)
-                .map(userMapper::toUser);
+    public Optional<UsuarioEntity> findUserById(int userId) {
+        return usuarioRepository.findById(userId);
     }
 
     @Override
