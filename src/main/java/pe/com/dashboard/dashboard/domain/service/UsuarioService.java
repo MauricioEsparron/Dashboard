@@ -11,7 +11,7 @@ List<UsuarioDTO> findAllUsers();
 
 Optional<UsuarioDTO> findUserById(int userId);
 
-List<UsuarioDTO> findByState(boolean estado);
+List<UsuarioDTO> findByState(int estado);
 
 List<UsuarioDTO> findTypeUser(int userType);
 

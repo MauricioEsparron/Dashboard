@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder 
+@Builder
 public class UsuarioEntity {
 
     @Id
@@ -17,26 +17,29 @@ public class UsuarioEntity {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String username;
 
     @Column(name = "password", nullable = false, length = 255)
     private String contrasenia;
 
-    @ManyToOne
-    @JoinColumn(name = "id_persona", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_persona")
     private PersonaEntity persona;
 
-    @Column(name = "id_persona")
-    private Integer idPersona;
-
-    @ManyToOne
-    @JoinColumn(name = "id_tipo_usuario", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_tipo_usuario")
     private TipoUsuarioEntity tipoUsuario;
-
-    @Column(name = "id_tipo_usuario")
-    private Integer idTipoUsuario;
 
     @Column(nullable = false)
     private Integer estado;
+
+    // Métodos helper para manejar los IDs
+    public Integer getIdPersona() {
+        return persona != null ? persona.getIdPersona() : null;
+    }
+
+    public Integer getIdTipoUsuario() {
+        return tipoUsuario != null ? tipoUsuario.getIdTipoUsuario() : null;
+    }
 }

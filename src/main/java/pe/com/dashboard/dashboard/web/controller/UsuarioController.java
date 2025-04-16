@@ -34,7 +34,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/state/{estado}")
-    public ResponseEntity<List<UsuarioDTO>> findByState(@PathVariable("estado") boolean estado) {
+    public ResponseEntity<List<UsuarioDTO>> findByState(@PathVariable("estado") int estado) {
         List<UsuarioDTO> users = usuarioService.findByState(estado);
         return new ResponseEntity<>(users, HttpStatus.OK); // 200 OK
     }
