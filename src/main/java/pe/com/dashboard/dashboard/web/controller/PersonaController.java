@@ -26,18 +26,18 @@ public class PersonaController {
         return personaService.findPersonById(personId);
     }
 
-    @GetMapping("/age/{age}")
-    public List<PersonaDTO> findPersonByAge(@PathVariable("age") int age) {
+    @GetMapping("/age/{value}")
+    public List<PersonaDTO> findPersonByAge(@PathVariable("value") int age) {
         return personaService.findPersonByAge(age);
     }    
 
-    @GetMapping("/address")
-    public List<PersonaDTO> findPersonByAddress(@RequestParam("value") String address) {
+    @GetMapping("/address/{value}")
+    public List<PersonaDTO> findPersonByAddress(@PathVariable("value") String address) {
         return personaService.findPersonByAddress(address);
     }
 
-    @GetMapping("/active")
-    public List<PersonaDTO> findPersonByActive(@RequestParam("value") Integer state) {
+    @GetMapping("/active/{value}")
+    public List<PersonaDTO> findPersonByActive(@PathVariable("value") Integer state) {
         return personaService.findPersonByActive(state);
     }
 
