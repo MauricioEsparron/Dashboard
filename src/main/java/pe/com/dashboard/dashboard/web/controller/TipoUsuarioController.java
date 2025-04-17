@@ -20,13 +20,13 @@ public class TipoUsuarioController {
     private final TipoUsuarioService tipoUsuarioService;
 
     @GetMapping
-    public ResponseEntity<List<TipoUsuarioDTO>> getAllUserTypes() {
+    public ResponseEntity<List<TipoUsuarioDTO>> findAllUserTypes() {
         List<TipoUsuarioDTO> tipos = tipoUsuarioService.findAllTypeUser();
         return ResponseEntity.ok(tipos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TipoUsuarioDTO> getUserTypeById(@PathVariable int id) {
+    public ResponseEntity<TipoUsuarioDTO> findUserTypeById(@PathVariable int id) {
         return tipoUsuarioService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
