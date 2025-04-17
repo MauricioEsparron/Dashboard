@@ -32,7 +32,7 @@ public class TipoUsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<TipoUsuarioDTO> createUserType(@RequestBody TipoUsuarioDTO userTypeDTO) {
         TipoUsuarioDTO created = tipoUsuarioService.createUserType(userTypeDTO);
         return ResponseEntity.ok(created);
