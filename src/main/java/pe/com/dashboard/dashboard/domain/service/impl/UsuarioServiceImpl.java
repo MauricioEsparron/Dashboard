@@ -6,6 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import pe.com.dashboard.dashboard.domain.dto.UsuarioDTO;
@@ -61,32 +64,53 @@ public class UsuarioServiceImpl implements UsuarioService {
     
     @Override
     public UsuarioDTO createUser(UsuarioDTO user) {
+        // Esta línea ahora funcionará porque el método está definido
+        if (usuarioRepository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("El nombre de usuario ya está en uso");
+        }
+    
+        // Encriptamos la contraseña antes de guardar
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword); // Actualiza la contraseña en el DTO
+    
+        // Mapear el DTO al Entity
         UsuarioEntity entity = userMapper.toUser(user);
-        entity.setIdUsuario(null); // Para que se genere nuevo ID
+        entity.setIdUsuario(null);
         UsuarioEntity saved = usuarioRepository.save(entity);
         return userMapper.toUser(saved);
     }
+    
 
-    @Override
-    public void updateUser(int userId, UsuarioDTO user) {
-        UsuarioEntity existente = usuarioRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+@Override
+@Transactional
+public void updateUser(int userId, UsuarioDTO user) {
+    // Buscar el usuario existente
+    UsuarioEntity existente = usuarioRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + userId));
 
-        existente.setUsername(user.getUsername());
+    // Actualizar los campos básicos
+    existente.setUsername(user.getUsername());
+
+    if (user.getPassword() != null && !user.getPassword().isBlank()) {
         existente.setContrasenia(passwordEncoder.encode(user.getPassword()));
-
-        // Buscar y asignar la Persona
-        PersonaEntity persona = personaRepository.findById(user.getPersonId())
-                .orElseThrow(() -> new RuntimeException("Persona no encontrada con ID: " + user.getPersonId()));
-        existente.setPersona(persona);
-
-        // Buscar y asignar el Tipo de Usuario
-        TipoUsuarioEntity tipoUsuario = tipoUsuarioRepository.findById(user.getUserTypeId())
-                .orElseThrow(() -> new RuntimeException("TipoUsuario no encontrado con ID: " + user.getUserTypeId()));
-        existente.setTipoUsuario(tipoUsuario);
-        existente.setEstado(user.getActive());
-        usuarioRepository.save(existente);
     }
+
+    // Asociar Persona
+    PersonaEntity persona = personaRepository.findById(user.getPersonId())
+            .orElseThrow(() -> new EntityNotFoundException("Persona no encontrada con ID: " + user.getPersonId()));
+    existente.setPersona(persona);
+
+    // Asociar Tipo de Usuario
+    TipoUsuarioEntity tipoUsuario = tipoUsuarioRepository.findById(user.getUserTypeId())
+            .orElseThrow(() -> new EntityNotFoundException("TipoUsuario no encontrado con ID: " + user.getUserTypeId()));
+    existente.setTipoUsuario(tipoUsuario);
+
+    // Estado
+    existente.setEstado(user.getActive());
+
+    // Guardar los cambios
+    usuarioRepository.save(existente);
+}
 
     @Override
     public void deleteUser(int userId) {
