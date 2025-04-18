@@ -25,47 +25,47 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> findAllUsers() {
         List<UsuarioDTO> users = usuarioService.findAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK); // 200 OK
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/id/{userId}")
-    public ResponseEntity<UsuarioDTO> findUserById(@PathVariable("userId") int userId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> findUserById(@PathVariable("id") int userId) {
         Optional<UsuarioEntity> userEntity = usuarioService.findUserById(userId);
 
         if (userEntity.isPresent()) {
             UsuarioDTO userDTO = userMapper.toUser(userEntity.get()); 
-            return new ResponseEntity<>(userDTO, HttpStatus.OK); // 200 OK
+            return new ResponseEntity<>(userDTO, HttpStatus.OK); 
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/state/{estado}")
-    public ResponseEntity<List<UsuarioDTO>> findByState(@PathVariable("estado") int estado) {
+    public ResponseEntity<List<UsuarioDTO>> findUserByState(@PathVariable int estado) {
         List<UsuarioDTO> users = usuarioService.findByState(estado);
-        return new ResponseEntity<>(users, HttpStatus.OK); // 200 OK
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/type/{userType}")
-    public ResponseEntity<List<UsuarioDTO>> findTypeUser(@PathVariable("userType") int userType) {
+    public ResponseEntity<List<UsuarioDTO>> findUserByTypeUser(@PathVariable int userType) {
         List<UsuarioDTO> users = usuarioService.findTypeUser(userType);
-        return new ResponseEntity<>(users, HttpStatus.OK); // 200 OK
+        return new ResponseEntity<>(users, HttpStatus.OK); 
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<UsuarioDTO> createUser(@RequestBody UsuarioDTO user) {
-        UsuarioDTO createdUser = usuarioService.createUser(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<UsuarioDTO> createUser(@RequestBody UsuarioDTO userDTO) {
+        UsuarioDTO createdUser = usuarioService.createUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
-
-    @PutMapping("/{userId}")
-    public ResponseEntity<Void> updateUser(@PathVariable("userId") int userId, @RequestBody UsuarioDTO user) {
-        usuarioService.updateUser(userId, user);
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUser(@PathVariable int id, @RequestBody UsuarioDTO user) {
+        usuarioService.updateUser(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("userId") int userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable int userId) {
         usuarioService.deleteUser(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
