@@ -21,7 +21,7 @@ public class ComentarioController {
         return ResponseEntity.ok(comentarioService.findAllComments());
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ComentarioDTO> findCommentById(@PathVariable("id") int commentId) {
         return comentarioService.findCommentById(commentId)
                 .map(ResponseEntity::ok)

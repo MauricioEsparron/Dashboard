@@ -22,7 +22,7 @@ public class AvanceTesisController {
         return ResponseEntity.ok(avanceTesisService.findAllAdvances());
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<AvanceTesisDTO> findAdvanceById(@PathVariable("id") int advanceId) {
         return avanceTesisService.findAdvanceById(advanceId)
                 .map(ResponseEntity::ok)
@@ -30,17 +30,17 @@ public class AvanceTesisController {
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByStudentId(@PathVariable("studentId") Integer studentId) {
+    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByStudentId(@PathVariable Integer studentId) {
         return ResponseEntity.ok(avanceTesisService.findAdvancesByStudentId(studentId));
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByStatus(@PathVariable("status") EstadoRevision status) {
+    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByStatus(@PathVariable EstadoRevision status) {
         return ResponseEntity.ok(avanceTesisService.findAdvancesByStatus(status));
     }
 
     @GetMapping("/title")
-    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByTitle(@RequestParam("value") String title) {
+    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByTitle(@RequestParam String title) {
         return ResponseEntity.ok(avanceTesisService.findAdvancesByTitle(title));
     }
 
