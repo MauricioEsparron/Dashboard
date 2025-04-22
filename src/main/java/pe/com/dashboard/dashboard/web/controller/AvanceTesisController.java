@@ -53,7 +53,7 @@ public class AvanceTesisController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateAdvance(@PathVariable("id") int advanceId, @RequestBody AvanceTesisDTO advance) {
         avanceTesisService.updateAdvance(advanceId, advance);
-        return ResponseEntity.noContent().build(); // 204 No Content
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

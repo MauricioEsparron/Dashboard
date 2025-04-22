@@ -1,5 +1,6 @@
 package pe.com.dashboard.dashboard.domain.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,26 +68,38 @@ public class AvanceTesisServiceImpl implements AvanceTesisService {
         return mapper.toThesisAdvance(avanceTesisRepository.save(avanceTesis));
     }
 
-    @Override
-    public void updateAdvance(int advanceId, AvanceTesisDTO advance) {
-        AvanceTesisEntity avanceEncontrado = avanceTesisRepository.findById(advanceId)
-            .orElseThrow(() -> new RuntimeException("Avance de tesis no encontrado"));
-        
-        avanceEncontrado.setTitulo(advance.getTitle());
-        avanceEncontrado.setDescripcion(advance.getDescription());
-        avanceEncontrado.setArchivoUrl(advance.getFileUrl());
+@Override
+public void updateAdvance(int advanceId, AvanceTesisDTO advance) {
+    AvanceTesisEntity avanceEncontrado = avanceTesisRepository.findById(advanceId)
+        .orElseThrow(() -> new RuntimeException("Avance de tesis no encontrado"));
+
+    avanceEncontrado.setTitulo(advance.getTitle());
+    avanceEncontrado.setDescripcion(advance.getDescription());
+    avanceEncontrado.setArchivoUrl(advance.getFileUrl());
+
+    // 🗓️ Fecha por defecto: si no viene del DTO, usamos la fecha actual
+    if (advance.getUploadDate() == null) {
+        avanceEncontrado.setFechaSubida(LocalDateTime.now());
+    } else {
         avanceEncontrado.setFechaSubida(advance.getUploadDate());
-        
-        // Aquí extraemos el ID del estado de avance de tesis
-        Integer estadoId = advance.getStatusProgressThesis().getStatusProgressThesisId();
-        EstadoAvanceTesisEntity estadoAvanceTesis = estadoAvanceTesisRepository.findById(estadoId)
-            .orElseThrow(() -> new RuntimeException("Estado de avance de tesis no encontrado"));
-        
-        avanceEncontrado.setEstadoAvanceTesis(estadoAvanceTesis);
-        avanceEncontrado.setIdEstudiante(advance.getStudentId());
-    
-        avanceTesisRepository.save(avanceEncontrado);
     }
+
+    // 🔢 Estado por defecto: si no viene del DTO, asignamos estado con ID = 1
+    EstadoAvanceTesisEntity estadoAvanceTesis;
+    if (advance.getStatusProgressThesis() == null) {
+        estadoAvanceTesis = estadoAvanceTesisRepository.findById(1)
+            .orElseThrow(() -> new RuntimeException("Estado de avance por defecto no encontrado"));
+    } else {
+        Integer estadoId = advance.getStatusProgressThesis().getStatusProgressThesisId();
+        estadoAvanceTesis = estadoAvanceTesisRepository.findById(estadoId)
+            .orElseThrow(() -> new RuntimeException("Estado de avance de tesis no encontrado"));
+    }
+    avanceEncontrado.setEstadoAvanceTesis(estadoAvanceTesis);
+
+    avanceEncontrado.setIdEstudiante(advance.getStudentId());
+
+    avanceTesisRepository.save(avanceEncontrado);
+} 
     
 
     @Override

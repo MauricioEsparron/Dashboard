@@ -44,7 +44,7 @@ public class AvanceTesisEntity {
     private String archivoUrl;
 
     @Column(name = "fecha_subida")
-    private LocalDateTime fechaSubida;
+    private LocalDateTime fechaSubida = LocalDateTime.now();
 
     // @Enumerated(EnumType.STRING)
     // @Column(name = "estado_revision")
