@@ -9,8 +9,9 @@ import org.mapstruct.Mappings;
 import pe.com.dashboard.dashboard.domain.dto.AvanceTesisDTO;
 import pe.com.dashboard.dashboard.persistence.model.entity.AvanceTesisEntity;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class, ThesisProgressStatusMapper.class})
 public interface ThesisAdvanceMapper {
+
     @Mappings({
         @Mapping(source = "idAvanceTesis", target = "advanceId"),
         @Mapping(source = "estudiante", target = "student"),
@@ -19,12 +20,14 @@ public interface ThesisAdvanceMapper {
         @Mapping(source = "descripcion", target = "description"),
         @Mapping(source = "archivoUrl", target = "fileUrl"),
         @Mapping(source = "fechaSubida", target = "uploadDate"),
-        @Mapping(source = "estadoRevision", target = "revisionStatus")
+        @Mapping(source = "estadoAvanceTesis", target = "statusProgressThesis")
+        // 👇 Ya no pongas esto:
+        // @Mapping(source = "idEstadoAvanceTesis", target = "idEstadoAvanceTesis", ignore = false)
     })
     AvanceTesisDTO toThesisAdvance(AvanceTesisEntity avanceTesis);
 
-    List<AvanceTesisDTO> toThesisAdvances(List<AvanceTesisEntity> avancesTesis);
+    List<AvanceTesisDTO> toThesisAdvance(List<AvanceTesisEntity> avancesTesis);
 
     @InheritInverseConfiguration
     AvanceTesisEntity toAvanceTesis(AvanceTesisDTO thesisAdvance);
-} 
+}

@@ -8,8 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,13 +46,22 @@ public class AvanceTesisEntity {
     @Column(name = "fecha_subida")
     private LocalDateTime fechaSubida;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estado_revision")
-    private EstadoRevision estadoRevision;
+    // @Enumerated(EnumType.STRING)
+    // @Column(name = "estado_revision")
+    // private EstadoRevision estadoRevision;
 
-    public enum EstadoRevision {
-        PENDIENTE,
-        REVISADO,
-        OBSERVADO
+    // public enum EstadoRevision {
+    //     PENDIENTE,
+    //     REVISADO,
+    //     OBSERVADO
+    // }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_estado_avance_tesis")
+    private EstadoAvanceTesisEntity estadoAvanceTesis;
+
+    // ✅ Sin interferir con MapStruct
+    public Integer getIdEstadoAvanceTesisFromEntity() {
+    return estadoAvanceTesis != null ? estadoAvanceTesis.getIdEstadoAvanceTesis() : null;
     }
 } 

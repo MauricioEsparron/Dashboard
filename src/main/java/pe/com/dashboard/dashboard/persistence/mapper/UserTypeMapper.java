@@ -16,7 +16,7 @@ public interface UserTypeMapper {
         @Mapping(source = "idTipoUsuario", target = "userType"),
         @Mapping(source = "descripcion", target = "description")
     })
-    TipoUsuarioDTO toUserTyper(TipoUsuarioEntity tipoUsuario);
+    TipoUsuarioDTO toUserType(TipoUsuarioEntity tipoUsuario);
 
     List<TipoUsuarioDTO> toUserTypes(List<TipoUsuarioEntity> tiposUsuario);
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import pe.com.dashboard.dashboard.domain.dto.AvanceTesisDTO;
 import pe.com.dashboard.dashboard.domain.service.AvanceTesisService;
-import pe.com.dashboard.dashboard.persistence.model.entity.AvanceTesisEntity.EstadoRevision;
+// import pe.com.dashboard.dashboard.persistence.model.entity.AvanceTesisEntity.EstadoRevision;
 
 @RestController
 @RequestMapping("/thesis-advances")
@@ -35,7 +35,7 @@ public class AvanceTesisController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByStatus(@PathVariable EstadoRevision status) {
+    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByStatus(@PathVariable Integer status) {
         return ResponseEntity.ok(avanceTesisService.findAdvancesByStatus(status));
     }
 

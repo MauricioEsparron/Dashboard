@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import pe.com.dashboard.dashboard.domain.dto.AvanceTesisDTO;
-import pe.com.dashboard.dashboard.persistence.model.entity.AvanceTesisEntity.EstadoRevision;
+
 
 public interface AvanceTesisService {
     List<AvanceTesisDTO> findAllAdvances();
@@ -13,7 +13,7 @@ public interface AvanceTesisService {
 
     List<AvanceTesisDTO> findAdvancesByStudentId(Integer studentId);
 
-    List<AvanceTesisDTO> findAdvancesByStatus(EstadoRevision status);
+    List<AvanceTesisDTO> findAdvancesByStatus(Integer status);
 
     List<AvanceTesisDTO> findAdvancesByTitle(String title);
 

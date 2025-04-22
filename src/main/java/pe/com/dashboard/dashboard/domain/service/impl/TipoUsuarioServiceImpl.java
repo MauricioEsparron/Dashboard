@@ -32,14 +32,14 @@ public class TipoUsuarioServiceImpl implements TipoUsuarioService {
     @Override
     public Optional<TipoUsuarioDTO> findById(int userTypeId) {
         return tipoUsuarioRepository.findById(userTypeId)
-                .map(userTypeMapper::toUserTyper);
+                .map(userTypeMapper::toUserType);
     }
 
     @Override
     public TipoUsuarioDTO createUserType(TipoUsuarioDTO userTypeDTO) {
         TipoUsuarioEntity entity = userTypeMapper.toTipoUsuario(userTypeDTO);
         TipoUsuarioEntity saved = tipoUsuarioRepository.save(entity);
-        return userTypeMapper.toUserTyper(saved);
+        return userTypeMapper.toUserType(saved);
     }
 
     @Override
