@@ -60,8 +60,10 @@ public class AvanceTesisEntity {
     @JoinColumn(name = "id_estado_avance_tesis")
     private EstadoAvanceTesisEntity estadoAvanceTesis;
 
-    // ✅ Sin interferir con MapStruct
-    public Integer getIdEstadoAvanceTesisFromEntity() {
+// Agrega este método
+public Integer getIdEstadoAvanceTesis() {
     return estadoAvanceTesis != null ? estadoAvanceTesis.getIdEstadoAvanceTesis() : null;
-    }
+}
+
+    
 } 
