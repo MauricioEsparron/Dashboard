@@ -72,8 +72,8 @@ public class AvanceTesisServiceImpl implements AvanceTesisService {
         }
     
         // Set estado (statusProgressThesis) manualmente
-        Integer estadoId = advance.getStatusProgressThesis() != null
-            ? advance.getStatusProgressThesis().getStatusProgressThesisId()
+        Integer estadoId = advance.getStateProgressThesis() != null
+            ? advance.getStateProgressThesis().getStatusProgressThesisId()
             : 1;
     
         EstadoAvanceTesisEntity estado = estadoAvanceTesisRepository.findById(estadoId)
@@ -119,11 +119,11 @@ public class AvanceTesisServiceImpl implements AvanceTesisService {
     
         // Actualizar estado de avance
         EstadoAvanceTesisEntity estadoAvanceTesis;
-        if (advance.getStatusProgressThesis() == null) {
+        if (advance.getStateProgressThesis() == null) {
             estadoAvanceTesis = estadoAvanceTesisRepository.findById(1)
                 .orElseThrow(() -> new RuntimeException("Estado de avance por defecto no encontrado"));
         } else {
-            Integer estadoId = advance.getStatusProgressThesis().getStatusProgressThesisId();
+            Integer estadoId = advance.getStateProgressThesis().getStatusProgressThesisId();
             estadoAvanceTesis = estadoAvanceTesisRepository.findById(estadoId)
                 .orElseThrow(() -> new RuntimeException("Estado de avance de tesis no encontrado"));
         }

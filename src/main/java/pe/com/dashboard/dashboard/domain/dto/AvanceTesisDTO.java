@@ -20,6 +20,6 @@ public class AvanceTesisDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime uploadDate;
-    private EstadoAvanceTesisDTO statusProgressThesis;
+    private EstadoAvanceTesisDTO stateProgressThesis;
     private UsuarioDTO student;
 }

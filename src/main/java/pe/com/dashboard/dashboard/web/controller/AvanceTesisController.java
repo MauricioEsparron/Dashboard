@@ -34,9 +34,9 @@ public class AvanceTesisController {
         return ResponseEntity.ok(avanceTesisService.findAdvancesByStudentId(studentId));
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByStatus(@PathVariable Integer status) {
-        return ResponseEntity.ok(avanceTesisService.findAdvancesByStatus(status));
+    @GetMapping("/state")
+    public ResponseEntity<List<AvanceTesisDTO>> findAdvancesByStatus(@RequestParam("value") Integer state) {
+        return ResponseEntity.ok(avanceTesisService.findAdvancesByStatus(state));
     }
 
     @GetMapping("/title")

@@ -20,7 +20,7 @@ public interface ThesisAdvanceMapper {
         @Mapping(source = "descripcion", target = "description"),
         @Mapping(source = "archivoUrl", target = "fileUrl"),
         @Mapping(source = "fechaSubida", target = "uploadDate"),
-        @Mapping(source = "estadoAvanceTesis", target = "statusProgressThesis"),
+        @Mapping(source = "estadoAvanceTesis", target = "stateProgressThesis"),
         @Mapping(source = "idEstadoAvanceTesis", target = "idEstadoAvanceTesis")
     })
     AvanceTesisDTO toThesisAdvance(AvanceTesisEntity avanceTesis);
