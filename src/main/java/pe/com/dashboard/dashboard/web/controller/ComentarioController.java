@@ -29,12 +29,12 @@ public class ComentarioController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ComentarioDTO>> findCommentsByUserId(@PathVariable("userId") Integer userId) {
+    public ResponseEntity<List<ComentarioDTO>> findCommentsByUserId(@PathVariable Integer userId) {
         return ResponseEntity.ok(comentarioService.findCommentsByUserId(userId));
     }
 
     @GetMapping("/advance/{advanceId}")
-    public ResponseEntity<List<ComentarioDTO>> findCommentsByAdvanceId(@PathVariable("advanceId") Integer advanceId) {
+    public ResponseEntity<List<ComentarioDTO>> findCommentsByAdvanceId(@PathVariable Integer advanceId) {
         return ResponseEntity.ok(comentarioService.findCommentsByAdvanceId(advanceId));
     }
 
@@ -43,7 +43,7 @@ public class ComentarioController {
         return ResponseEntity.ok(comentarioService.findCommentsByState(state));
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ComentarioDTO> createComment(@RequestBody ComentarioDTO comment) {
         return ResponseEntity.ok(comentarioService.createComment(comment));
     }
