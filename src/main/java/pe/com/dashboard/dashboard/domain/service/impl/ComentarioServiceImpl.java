@@ -1,5 +1,6 @@
 package pe.com.dashboard.dashboard.domain.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +50,19 @@ public class ComentarioServiceImpl implements ComentarioService {
         return mapper.toComments(comentarioRepository.findByEstado(state));
     }
 
-    @Override
-    public ComentarioDTO createComment(ComentarioDTO comment) {
-        ComentarioEntity comentario = mapper.toComentario(comment);
-        comentario.setIdComentario(null); // Asegurar que se genera nuevo ID
-        return mapper.toComment(comentarioRepository.save(comentario));
+@Override
+public ComentarioDTO createComment(ComentarioDTO comment) {
+    // Si no se recibe fecha desde el DTO, establecer la fecha actual
+    if (comment.getDate() == null) {
+        comment.setDate(LocalDateTime.now());
     }
+
+    ComentarioEntity comentario = mapper.toComentario(comment);
+    comentario.setIdComentario(null); // Asegurar que se genera nuevo ID
+
+    return mapper.toComment(comentarioRepository.save(comentario));
+}
+
 
     @Override
     public void updateComment(int commentId, ComentarioDTO comment) {
