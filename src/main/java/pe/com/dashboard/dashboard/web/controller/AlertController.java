@@ -1,6 +1,8 @@
 package pe.com.dashboard.dashboard.web.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,13 +88,16 @@ public class AlertController {
         }
     }
 
-    @GetMapping("/date-range")
-    public ResponseEntity<List<AlertaDTO>> getAlertsByDateRange(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
-        try {
-            List<AlertaDTO> alerts = alertService.getByDateRange(start, end);
-            return new ResponseEntity<>(alerts, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+@GetMapping("/date-range")
+public ResponseEntity<List<AlertaDTO>> getAlertsByDateRange(
+        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end) {
+    try {
+        List<AlertaDTO> alerts = alertService.getByDateRange(start, end);
+        return new ResponseEntity<>(alerts, HttpStatus.OK);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
 }
