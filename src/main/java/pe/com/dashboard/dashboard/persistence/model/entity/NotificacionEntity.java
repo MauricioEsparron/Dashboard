@@ -21,7 +21,7 @@ public class NotificacionEntity {
     @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "fecha", columnDefinition = "DATETIME(0)")
+    @Column(name = "fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime fecha;
 
     @Column(name = "leido")

@@ -15,7 +15,8 @@ import pe.com.dashboard.dashboard.persistence.repository.NotificacionRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+
 
 @Service
 @RequiredArgsConstructor
@@ -40,39 +41,59 @@ public class NotificacionServiceImpl implements NotificacionService {
 
     @Override
     public NotificacionDTO save(NotificacionDTO notificacionDTO) {
-        NotificacionEntity notificacionEntity = mapper.toEntity(notificacionDTO);
-
-        if (notificacionEntity.getFecha() == null) {
-            notificacionEntity.setFecha(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)); // Fecha sin milisegundos
+        NotificacionEntity notificacion = mapper.toEntity(notificacionDTO);
+    
+        // Fecha actual si no viene
+        if (notificacion.getFecha() == null) {
+            notificacion.setFecha(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         }
-
-        if (notificacionEntity.getLeido() == null) {
-            notificacionEntity.setLeido(0); // No leído por defecto
+    
+        // Valor por defecto de 'leído'
+        if (notificacion.getLeido() == null) {
+            notificacion.setLeido(0); // no leído
         }
-        if (notificacionEntity.getIdUsuario() != null) {
-            UsuarioEntity usuario = userService.findUserById(notificacionEntity.getIdUsuario())
+    
+        // Validar existencia del usuario
+        if (notificacion.getIdUsuario() != null) {
+            UsuarioEntity usuario = userService.findUserById(notificacion.getIdUsuario())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-            notificacionEntity.setUsuario(usuario);
+            notificacion.setUsuario(usuario);
+        } else {
+            throw new RuntimeException("ID de usuario requerido para guardar notificación");
         }
-        NotificacionEntity savedNotificacion = notiRepository.save(notificacionEntity);
-
-        return mapper.toDto(savedNotificacion);
+    
+        NotificacionEntity saved = notiRepository.save(notificacion);
+        return mapper.toDto(saved);
     }
+    
 
     @Override
     public NotificacionDTO update(Integer id, NotificacionDTO dto) {
-        Optional<NotificacionEntity> optional = notiRepository.findById(id);
-        if (optional.isEmpty())
-            return null;
-
-        NotificacionEntity existing = optional.get();
-        existing.setDescripcion(dto.getDescription());
-        existing.setLeido(dto.getRead());
-        existing.setFecha(dto.getDate() != null ? dto.getDate() : existing.getFecha());
-
-        return mapper.toDto(notiRepository.save(existing));
+        NotificacionEntity notificacionExistente = notiRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notificación no encontrada"));
+    
+        boolean contenidoModificado = false;
+    
+        // Comparar campos para actualizar y detectar cambios
+        if (!Objects.equals(notificacionExistente.getDescripcion(), dto.getDescription())) {
+            notificacionExistente.setDescripcion(dto.getDescription());
+            contenidoModificado = true;
+        }
+    
+        if (!Objects.equals(notificacionExistente.getLeido(), dto.getRead())) {
+            notificacionExistente.setLeido(dto.getRead());
+            contenidoModificado = true;
+        }
+    
+        if (contenidoModificado) {
+            notificacionExistente.setFecha(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        } else if (dto.getDate() != null) {
+            notificacionExistente.setFecha(dto.getDate().truncatedTo(ChronoUnit.SECONDS));
+        }
+    
+        return mapper.toDto(notiRepository.save(notificacionExistente));
     }
+    
 
     @Override
     public void delete(Integer id) {
