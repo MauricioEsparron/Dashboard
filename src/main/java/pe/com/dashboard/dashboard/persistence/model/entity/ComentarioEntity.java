@@ -29,8 +29,8 @@ public class ComentarioEntity {
     @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "fecha")
-    private LocalDateTime fecha;
+    @Column(name = "fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime fecha;    
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", insertable = false, updatable = false)

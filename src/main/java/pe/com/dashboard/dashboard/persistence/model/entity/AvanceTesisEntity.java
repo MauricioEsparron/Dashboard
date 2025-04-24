@@ -43,24 +43,13 @@ public class AvanceTesisEntity {
     @Column(name = "archivo_url")
     private String archivoUrl;
 
-    @Column(name = "fecha_subida")
-    private LocalDateTime fechaSubida = LocalDateTime.now();
-
-    // @Enumerated(EnumType.STRING)
-    // @Column(name = "estado_revision")
-    // private EstadoRevision estadoRevision;
-
-    // public enum EstadoRevision {
-    //     PENDIENTE,
-    //     REVISADO,
-    //     OBSERVADO
-    // }
+    @Column(name = "fecha_subida",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime fechaSubida;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_estado_avance_tesis")
     private EstadoAvanceTesisEntity estadoAvanceTesis;
 
-// Agrega este método
 public Integer getIdEstadoAvanceTesis() {
     return estadoAvanceTesis != null ? estadoAvanceTesis.getIdEstadoAvanceTesis() : null;
 }
