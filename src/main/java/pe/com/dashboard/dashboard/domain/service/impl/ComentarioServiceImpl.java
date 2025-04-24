@@ -64,19 +64,44 @@ public ComentarioDTO createComment(ComentarioDTO comment) {
 }
 
 
-    @Override
-    public void updateComment(int commentId, ComentarioDTO comment) {
-        ComentarioEntity comentarioEncontrado = comentarioRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comentario no encontrado"));
+@Override
+public void updateComment(int commentId, ComentarioDTO comment) {
+    ComentarioEntity comentarioEncontrado = comentarioRepository.findById(commentId)
+        .orElseThrow(() -> new RuntimeException("Comentario no encontrado"));
 
+    // Verificar si hubo cambios relevantes
+    boolean contentChanged = false;
+
+    if (!comentarioEncontrado.getDescripcion().equals(comment.getDescription())) {
         comentarioEncontrado.setDescripcion(comment.getDescription());
-        comentarioEncontrado.setFecha(comment.getDate());
-        comentarioEncontrado.setIdUsuario(comment.getUserId());
-        comentarioEncontrado.setIdAvance(comment.getAdvanceId());
-        comentarioEncontrado.setEstado(comment.getState());
-
-        comentarioRepository.save(comentarioEncontrado);
+        contentChanged = true;
     }
+
+    if (!comentarioEncontrado.getIdUsuario().equals(comment.getUserId())) {
+        comentarioEncontrado.setIdUsuario(comment.getUserId());
+        contentChanged = true;
+    }
+
+    if (!comentarioEncontrado.getIdAvance().equals(comment.getAdvanceId())) {
+        comentarioEncontrado.setIdAvance(comment.getAdvanceId());
+        contentChanged = true;
+    }
+
+    if (!comentarioEncontrado.getEstado().equals(comment.getState())) {
+        comentarioEncontrado.setEstado(comment.getState());
+        contentChanged = true;
+    }
+
+    // Si hubo cambios, actualizar la fecha
+    if (contentChanged) {
+        comentarioEncontrado.setFecha(LocalDateTime.now());
+    } else if (comment.getDate() != null) {
+        comentarioEncontrado.setFecha(comment.getDate());
+    }
+
+    comentarioRepository.save(comentarioEncontrado);
+}
+
 
     @Override
     public void deleteComment(int commentId) {
