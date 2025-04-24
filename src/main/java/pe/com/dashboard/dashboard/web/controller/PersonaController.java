@@ -41,7 +41,7 @@ public class PersonaController {
         return personaService.findPersonByActive(state);
     }
 
-    @PostMapping("/createPerson")
+    @PostMapping
     public PersonaDTO createPerson(@RequestBody PersonaDTO person) {
         return personaService.createPerson(person);
     }
