@@ -21,14 +21,16 @@ public interface UserMapper {
         @Mapping(source = "tipoUsuario", target = "userType"),
         @Mapping(source = "idTipoUsuario", target = "userTypeId", ignore = false),
         @Mapping(source = "estado", target = "active"),
+        @Mapping(source = "persona.nombre", target = "name"),
     })
     UsuarioDTO toUser(UsuarioEntity usuario);
 
     List<UsuarioDTO> toUsers(List<UsuarioEntity> usuarios);
 
     @InheritInverseConfiguration
-    // @Mapping(target = "#", ignore = true)
+    @Mapping(source = "person", target = "persona")
+    @Mapping(source = "userType", target = "tipoUsuario")
     UsuarioEntity toUser(UsuarioDTO user);
-
+    
 
 }

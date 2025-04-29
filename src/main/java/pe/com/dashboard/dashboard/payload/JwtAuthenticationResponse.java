@@ -13,7 +13,7 @@ public class JwtAuthenticationResponse {
 
     private String token;
     private String username;
-    private List<String> roles;
     private String nombre;
+    private List<String> roles;
 
 }

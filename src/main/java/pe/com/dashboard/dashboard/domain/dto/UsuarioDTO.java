@@ -12,6 +12,7 @@ public class UsuarioDTO {
     private Integer personId;
     private Integer userTypeId;
     private Integer active;
+    private String name;
     private PersonaDTO person;
     private TipoUsuarioDTO userType;
 
