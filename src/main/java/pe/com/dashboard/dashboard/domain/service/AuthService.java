@@ -41,39 +41,37 @@ public class AuthService {
             this.userMapper = userMapper;
         }
 
-    public JwtAuthenticationResponse authenticate(String username, String password) {
+        public JwtAuthenticationResponse authenticate(String username, String password) {
 
-        // 1. Autenticar
-          // 1. Autenticar
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(username, password)
-    );
-
-    // 2. Obtener UserDetails
-    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-    // 3. Generar Token
-    String token = jwtService.generateToken(userDetails);
-
-    // 4. Traer el UsuarioEntity
-    UsuarioEntity usuarioEntity = usuarioRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
-
-    // 5. Convertir a UsuarioDTO
-    UsuarioDTO usuarioDTO = userMapper.toUser(usuarioEntity);
-
-    // 6. Obtener roles
-    List<String> roles = userDetails.getAuthorities().stream()
-            .map(auth -> auth.getAuthority())
-            .collect(Collectors.toList());
-
-    // 7. Construir respuesta usando el DTO
-    return new JwtAuthenticationResponse(
-            token,
-            username,
-            usuarioDTO.getName(), // <-- Ahora desde el DTO
-            roles
-    );
-}
-
-}
+            // 1. Autenticar
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+            );
+        
+            // 2. Obtener UserDetails
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        
+            // 3. Generar Token pasando los roles
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(auth -> auth.getAuthority())
+                    .collect(Collectors.toList());
+        
+            // 4. Generar el Token con los roles
+            String token = jwtService.generateToken(userDetails, roles);
+        
+            // 5. Traer el UsuarioEntity
+            UsuarioEntity usuarioEntity = usuarioRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
+        
+            // 6. Convertir a UsuarioDTO
+            UsuarioDTO usuarioDTO = userMapper.toUser(usuarioEntity);
+        
+            // 7. Construir respuesta usando el DTO
+            return new JwtAuthenticationResponse(
+                    token,
+                    username,
+                    usuarioDTO.getName(), // <-- Ahora desde el DTO
+                    roles
+            );
+        }
+    }        
