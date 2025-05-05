@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 import java.util.function.Function;
 
 @Service
@@ -20,11 +19,11 @@ public class JwtService {
     }
 
     // Método para generar el token JWT con roles
-    public String generateToken(UserDetails userDetails, List<String> roles) {
+    public String generateToken(UserDetails userDetails, String rol) {
         return Jwts
                 .builder()
                 .setSubject(userDetails.getUsername()) // Nombre de usuario
-                .claim("roles", roles)  // Agregar los roles al token
+                .claim("rol", rol)  // nota: ya no es "roles", sino "rol"
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -69,9 +68,8 @@ public class JwtService {
     }
 
     // Extraer los roles del token
-    @SuppressWarnings("unchecked")
-    public List<String> extractRoles(String token) {
+    public String extractRol(String token) {
         Claims claims = extractAllClaims(token);
-        return (List<String>) claims.get("roles");  // Conversión de tipos para obtener los roles
+        return (String) claims.get("rol");  // Conversión de tipos para obtener los roles
     }
 }
