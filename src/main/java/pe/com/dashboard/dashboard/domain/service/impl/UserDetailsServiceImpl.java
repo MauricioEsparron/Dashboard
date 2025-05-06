@@ -20,9 +20,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UsuarioEntity usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        // Obtenemos el rol del tipo de usuario
-        String rolDescripcion = usuario.getTipoUsuario().getDescripcion(); // Ej: "ADMIN", "ESTUDIANTE"
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + rolDescripcion.toUpperCase());
+        // Obtenemos la descripción del rol
+        String rolDescripcion = usuario.getTipoUsuario().getDescripcion(); // Ej: "Asesor de Experiencia"
+
+        // Normalizamos el rol: lo pasamos a mayúsculas y reemplazamos espacios por guiones bajos
+        String rolNormalizado = rolDescripcion.toUpperCase().replace(" ", "_");
+
+        // Creamos la autoridad con el prefijo ROLE_
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + rolNormalizado);
 
         return new org.springframework.security.core.userdetails.User(
                 usuario.getUsername(),
