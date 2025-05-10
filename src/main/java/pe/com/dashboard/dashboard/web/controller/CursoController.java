@@ -5,10 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.persistence.EntityNotFoundException;
 import pe.com.dashboard.dashboard.domain.dto.CursoDTO;
 import pe.com.dashboard.dashboard.domain.service.CursoService;
 
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -53,17 +56,27 @@ public class CursoController {
         cursoService.deleteCourse(courseId);
     }
 
-    @PostMapping("/{cursoId}/inscribir/{usuarioId}")
-    public ResponseEntity<String> inscribirEstudianteEnCurso(
-            @PathVariable Integer cursoId,
-            @PathVariable Integer usuarioId) {
-        try {
-            cursoService.inscribirEstudianteEnCurso(cursoId, usuarioId);
-            return ResponseEntity.ok("Estudiante inscrito correctamente al curso.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado.");
-        }
+@PostMapping("/{cursoId}/inscribir/{usuarioId}")
+public ResponseEntity<?> inscribirEstudiante(
+        @PathVariable Integer cursoId,
+        @PathVariable Integer usuarioId) {
+    
+    try {
+        cursoService.enrollStudentToCourse(cursoId, usuarioId);
+        return ResponseEntity.ok().body(
+            Map.of("success", true, "message", "Inscripción exitosa")
+        );
+    } catch (EntityNotFoundException e) {
+        return ResponseEntity.status(404).body(
+            Map.of("success", false, "error", e.getMessage())
+        );
+    } catch (SecurityException e) {
+        return ResponseEntity.status(403).body(
+            Map.of("success", false, "error", e.getMessage())
+        );
+    } catch (IllegalStateException e) {
+        return ResponseEntity.status(409).body(
+            Map.of("success", false, "error", e.getMessage())
+        );
     }
-}
+}}

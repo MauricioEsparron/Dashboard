@@ -23,6 +23,6 @@ public interface CursoService {
 
     void deleteCourse(int courseId);
 
-    void inscribirEstudianteEnCurso(Integer cursoId, Integer usuarioId);
+    void enrollStudentToCourse(Integer courseId, Integer studentId);
 
 }

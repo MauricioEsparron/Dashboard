@@ -23,4 +23,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
 
     @Query("SELECT u FROM UsuarioEntity u JOIN FETCH u.persona WHERE u.idUsuario = :id")
     Optional<UsuarioEntity> findByIdWithPersona(@Param("id") Integer id);
+
+        @Query("SELECT u FROM UsuarioEntity u JOIN FETCH u.tipoUsuario WHERE u.idUsuario = :id")
+    Optional<UsuarioEntity> findByIdWithTipoUsuario(@Param("id") Integer id);
 }

@@ -1,5 +1,7 @@
 package pe.com.dashboard.dashboard.persistence.model.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,4 +29,7 @@ public class InscripcionEntity {
 
     @Column(name = "acceso_permitido", nullable = false)
     private Boolean accesoPermitido;
+
+    @Column(name = "fecha_inscripcion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime fechaInscripcion;
 }
