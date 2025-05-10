@@ -21,12 +21,16 @@ public interface ThesisAdvanceMapper {
         @Mapping(source = "archivoUrl", target = "fileUrl"),
         @Mapping(source = "fechaSubida", target = "uploadDate"),
         @Mapping(source = "estadoAvanceTesis", target = "stateProgressThesis"),
-        @Mapping(source = "idEstadoAvanceTesis", target = "idEstadoAvanceTesis")
+        @Mapping(source = "estadoAvanceTesis.idEstadoAvanceTesis", target = "idEstadoAvanceTesis")
     })
     AvanceTesisDTO toThesisAdvance(AvanceTesisEntity avanceTesis);
 
     List<AvanceTesisDTO> toThesisAdvance(List<AvanceTesisEntity> avancesTesis);
 
     @InheritInverseConfiguration
+    @Mappings({
+        @Mapping(target = "estadoAvanceTesis", ignore = true),
+        @Mapping(target = "estudiante", ignore = true)
+    })
     AvanceTesisEntity toAvanceTesis(AvanceTesisDTO thesisAdvance);
 }

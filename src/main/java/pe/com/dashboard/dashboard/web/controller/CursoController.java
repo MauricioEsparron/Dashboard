@@ -1,6 +1,7 @@
 package pe.com.dashboard.dashboard.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,65 +9,61 @@ import pe.com.dashboard.dashboard.domain.dto.CursoDTO;
 import pe.com.dashboard.dashboard.domain.service.CursoService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/cursos")
+@RequestMapping("/courses")
 public class CursoController {
 
     @Autowired
     private CursoService cursoService;
 
     @GetMapping
-    public ResponseEntity<List<CursoDTO>> getAll() {
-        return ResponseEntity.ok(cursoService.getAll());
+    public List<CursoDTO> findAllCourses() {
+        return cursoService.findAllCourses();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CursoDTO> getById(@PathVariable Integer id) {
-        return cursoService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Optional<CursoDTO> findCourseById(@PathVariable Integer id) {
+        return cursoService.findCourseById(id);
+    }
+
+    @GetMapping("/state/{id}")
+    public List<CursoDTO> findCourseByState(@PathVariable Integer id) {
+        return cursoService.findCourseByState(id);
+    }
+
+    @GetMapping("/professor/{id}")
+    public List<CursoDTO> findCourseByProfessorId(@PathVariable Integer id) {
+        return cursoService.findCourseByProfessorId(id);
     }
 
     @PostMapping
-    public ResponseEntity<CursoDTO> save(@RequestBody CursoDTO cursoDTO) {
-        return ResponseEntity.ok(cursoService.save(cursoDTO));
+    public CursoDTO createCourse(@RequestBody CursoDTO course) {
+        return cursoService.createCourse(course);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CursoDTO> update(@PathVariable Integer id, @RequestBody CursoDTO cursoDTO) {
-        if (!cursoService.getById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        cursoDTO.setIdCourse(id);
-        return ResponseEntity.ok(cursoService.save(cursoDTO));
+    public void updateCourse(@PathVariable("id") int courseId, @RequestBody CursoDTO course) {
+        cursoService.updateCourse(courseId, course);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        if (!cursoService.getById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+    public void deleteCourse(@PathVariable("id") int courseId) {
+        cursoService.deleteCourse(courseId);
+    }
+
+    @PostMapping("/{cursoId}/inscribir/{usuarioId}")
+    public ResponseEntity<String> inscribirEstudianteEnCurso(
+            @PathVariable Integer cursoId,
+            @PathVariable Integer usuarioId) {
+        try {
+            cursoService.inscribirEstudianteEnCurso(cursoId, usuarioId);
+            return ResponseEntity.ok("Estudiante inscrito correctamente al curso.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado.");
         }
-        cursoService.delete(id);
-        return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<CursoDTO>> getByStatus(@PathVariable String status) {
-        return ResponseEntity.ok(cursoService.getByStatus(status));
-    }
-
-    @GetMapping("/professor/{professorId}")
-    public ResponseEntity<List<CursoDTO>> getByProfessor(@PathVariable Integer professorId) {
-        return ResponseEntity.ok(cursoService.getByProfessorId(professorId));
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<CursoDTO> changeStatus(@PathVariable Integer id, @RequestParam String status) {
-        CursoDTO updated = cursoService.changeStatus(id, status);
-        if (updated == null)
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(updated);
-    }
-
 }

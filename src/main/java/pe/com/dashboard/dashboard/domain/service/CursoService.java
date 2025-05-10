@@ -1,23 +1,28 @@
 package pe.com.dashboard.dashboard.domain.service;
 
-import pe.com.dashboard.dashboard.domain.dto.CursoDTO;
-
 import java.util.List;
 import java.util.Optional;
 
+import pe.com.dashboard.dashboard.domain.dto.CursoDTO;
+
 public interface CursoService {
-    List<CursoDTO> getAll();
 
-    Optional<CursoDTO> getById(Integer id);
+    List<CursoDTO> findAllCourses();
 
-    CursoDTO save(CursoDTO cursoDTO);
+    Optional<CursoDTO> findCourseById(Integer id);
 
-    void delete(Integer id);
+    List<CursoDTO> findCourseByState(Integer state);
+    
+    List<CursoDTO> findCourseByProfessorId(Integer professorId);
+    
+    List<CursoDTO> findCursosConConteo();
 
-    List<CursoDTO> getByStatus(String status);
+    CursoDTO createCourse(CursoDTO course);
+    
+    void updateCourse(int courseId, CursoDTO course);
 
-    List<CursoDTO> getByProfessorId(Integer professorId);
+    void deleteCourse(int courseId);
 
-    CursoDTO changeStatus(Integer id, String newStatus);
+    void inscribirEstudianteEnCurso(Integer cursoId, Integer usuarioId);
 
 }
