@@ -19,7 +19,8 @@ public interface InscriptionMapper {
         @Mapping(source = "curso.nombre", target = "courseName"),
         @Mapping(source = "estudiante.idUsuario", target = "studentId"),
         @Mapping(source = "estudiante.persona.nombre", target = "studentName"),
-        @Mapping(source = "accesoPermitido", target = "accessGranted")
+        @Mapping(source = "accesoPermitido", target = "accessGranted"),
+        @Mapping(source = "fechaInscripcion", target = "registrationDate")
     })
     InscripcionDTO toInscripcion(InscripcionEntity entity);
 
