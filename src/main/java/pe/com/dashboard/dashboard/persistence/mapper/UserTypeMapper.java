@@ -13,7 +13,7 @@ import pe.com.dashboard.dashboard.persistence.model.entity.TipoUsuarioEntity;
 @Mapper(componentModel = "spring")
 public interface UserTypeMapper {
     @Mappings({
-        @Mapping(source = "idTipoUsuario", target = "userType"),
+        @Mapping(source = "idTipoUsuario", target = "userTypeId"),
         @Mapping(source = "descripcion", target = "description")
     })
     TipoUsuarioDTO toUserType(TipoUsuarioEntity tipoUsuario);

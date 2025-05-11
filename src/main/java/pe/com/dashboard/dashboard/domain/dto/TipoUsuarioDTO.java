@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter  
 public class TipoUsuarioDTO {
-    private Integer userType;
+    private Integer userTypeId;
     private String description;
 }
