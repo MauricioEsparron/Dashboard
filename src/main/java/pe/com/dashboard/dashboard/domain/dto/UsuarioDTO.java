@@ -11,10 +11,11 @@ public class UsuarioDTO {
     private String password;
     private Integer personId;
     private Integer userTypeId;
-    private Integer active;
+    private Integer userStateId;
     private String name;
     private PersonaDTO person;
     private TipoUsuarioDTO userType;
+    private EstadoUsuarioDTO userState;
 
 
 }

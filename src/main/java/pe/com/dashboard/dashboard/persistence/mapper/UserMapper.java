@@ -10,7 +10,7 @@ import org.mapstruct.Mappings;
 import pe.com.dashboard.dashboard.domain.dto.UsuarioDTO;
 import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 
-@Mapper(componentModel = "spring", uses = {PersonMapper.class,UserTypeMapper.class})
+@Mapper(componentModel = "spring", uses = {PersonMapper.class,UserTypeMapper.class, UserStateMapper.class})
 public interface UserMapper {
     @Mappings({
         @Mapping(source = "idUsuario", target = "userId"),
@@ -20,7 +20,8 @@ public interface UserMapper {
         @Mapping(source = "idPersona", target = "personId", ignore = false),
         @Mapping(source = "tipoUsuario", target = "userType"),
         @Mapping(source = "idTipoUsuario", target = "userTypeId", ignore = false),
-        @Mapping(source = "estado", target = "active"),
+        @Mapping(source = "estadoUsuario", target = "userState"),
+        @Mapping(source = "idEstadoUsuario", target = "userStateId"),
         @Mapping(source = "persona.nombre", target = "name"),
     })
     UsuarioDTO toUser(UsuarioEntity usuario);
@@ -30,6 +31,7 @@ public interface UserMapper {
     @InheritInverseConfiguration
     @Mapping(source = "person", target = "persona")
     @Mapping(source = "userType", target = "tipoUsuario")
+    @Mapping(source = "userState", target = "estadoUsuario")
     UsuarioEntity toUser(UsuarioDTO user);
     
 

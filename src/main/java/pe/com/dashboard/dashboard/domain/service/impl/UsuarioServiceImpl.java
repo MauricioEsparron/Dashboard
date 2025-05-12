@@ -14,9 +14,11 @@ import lombok.RequiredArgsConstructor;
 import pe.com.dashboard.dashboard.domain.dto.UsuarioDTO;
 import pe.com.dashboard.dashboard.domain.service.UsuarioService;
 import pe.com.dashboard.dashboard.persistence.mapper.UserMapper;
+import pe.com.dashboard.dashboard.persistence.model.entity.EstadoUsuarioEntity;
 import pe.com.dashboard.dashboard.persistence.model.entity.PersonaEntity;
 import pe.com.dashboard.dashboard.persistence.model.entity.TipoUsuarioEntity;
 import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
+import pe.com.dashboard.dashboard.persistence.repository.EstadoUsuarioRepository;
 import pe.com.dashboard.dashboard.persistence.repository.PersonaRepository;
 import pe.com.dashboard.dashboard.persistence.repository.TipoUsuarioRepository;
 import pe.com.dashboard.dashboard.persistence.repository.UsuarioRepository;
@@ -40,6 +42,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private TipoUsuarioRepository tipoUsuarioRepository;
 
+   @Autowired
+    private EstadoUsuarioRepository estadoUsuarioRepository;
+
     @Override
     public List<UsuarioDTO> findAllUsers() {
         List<UsuarioEntity> usuarios = usuarioRepository.findAll();
@@ -52,9 +57,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<UsuarioDTO> findByState(int state) {
-
-        return userMapper.toUsers(usuarioRepository.findByEstado(state));
+    public List<UsuarioDTO> findByState(int userState) {
+        return userMapper.toUsers(usuarioRepository.findByEstadoUsuarioIdEstadoUsuario(userState));
     }
 
     @Override
@@ -106,7 +110,9 @@ public void updateUser(int userId, UsuarioDTO user) {
     existente.setTipoUsuario(tipoUsuario);
 
     // Estado
-    existente.setEstado(user.getActive());
+    EstadoUsuarioEntity estadoUsuario = estadoUsuarioRepository.findById(user.getUserStateId())
+            .orElseThrow(() -> new EntityNotFoundException("EstadoUsuario no encontrado con ID: " + user.getUserStateId()));
+    existente.setEstadoUsuario(estadoUsuario);
 
     // Guardar los cambios
     usuarioRepository.save(existente);

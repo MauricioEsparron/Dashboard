@@ -13,7 +13,7 @@ import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 @Repository
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer> {
 
-    List<UsuarioEntity> findByEstado(Integer estado);
+    List<UsuarioEntity> findByEstadoUsuarioIdEstadoUsuario(Integer idEstadoUsuario);
 
     Optional<UsuarioEntity> findByUsername(String username);
 

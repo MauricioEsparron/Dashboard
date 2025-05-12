@@ -29,10 +29,11 @@ public class UsuarioEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipo_usuario")
-    private TipoUsuarioEntity tipoUsuario;    
+    private TipoUsuarioEntity tipoUsuario;
 
-    @Column(nullable = false)
-    private Integer estado;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_estado_usuario")
+    private EstadoUsuarioEntity estadoUsuario;
 
     // Métodos helper para manejar los IDs
     public Integer getIdPersona() {
@@ -41,5 +42,9 @@ public class UsuarioEntity {
 
     public Integer getIdTipoUsuario() {
         return tipoUsuario != null ? tipoUsuario.getIdTipoUsuario() : null;
+    }
+
+    public Integer getIdEstadoUsuario() {
+        return estadoUsuario != null ? estadoUsuario.getIdEstadoUsuario() : null;
     }
 }
