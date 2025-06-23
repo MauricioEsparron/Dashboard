@@ -60,8 +60,13 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public boolean delete(Integer id) {
+          if (!alertRepository.existsById(id)) {
+            return false;
+        }
+
         alertRepository.deleteById(id);
+        return true;
     }
 
     @Override
@@ -75,7 +80,7 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public AlertaDTO update(Integer id, AlertaDTO alertaDTO) {
+    public Optional<AlertaDTO> update(Integer id, AlertaDTO alertaDTO) {
         Optional<AlertaEntity> existingAlerta = alertRepository.findById(id);
 
         if (existingAlerta.isPresent()) {
@@ -85,7 +90,7 @@ public class AlertServiceImpl implements AlertService {
             entity.setSuscripcion(alertaDTO.getSubscription());
 
             AlertaEntity updated = alertRepository.save(entity);
-            return alertMapper.toAlert(updated);
+            return Optional.of(alertMapper.toAlert(updated));
         }
 
         return null;

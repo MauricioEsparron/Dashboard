@@ -18,7 +18,7 @@ public interface ComentarioService {
 
     ComentarioDTO createComment(ComentarioDTO comment);
 
-    void updateComment(int commentId, ComentarioDTO comment);
+    Optional<ComentarioDTO> updateComment(int commentId, ComentarioDTO comment);
     
-    void deleteComment(int commentId);
+    boolean deleteComment(int commentId);
 } 
