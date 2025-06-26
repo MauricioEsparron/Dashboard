@@ -20,12 +20,12 @@
             @Mapping(source = "idAvance", target = "advanceId"),
             @Mapping(source = "estado", target = "state")
         })
-        ComentarioDTO toComment(ComentarioEntity comentario);
+        ComentarioDTO toCommentDTO(ComentarioEntity comentario);
     
         List<ComentarioDTO> toComments(List<ComentarioEntity> comentarios);
     
         @InheritInverseConfiguration
-        ComentarioEntity toComentario(ComentarioDTO comment);
+        ComentarioEntity toComentarioEntity(ComentarioDTO comment);
     }
     
     

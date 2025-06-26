@@ -17,7 +17,7 @@ import pe.com.dashboard.dashboard.persistence.repository.ComentarioRepository;
 @Service
 @RequiredArgsConstructor
 public class ComentarioServiceImpl implements ComentarioService {
-    
+
     @Autowired
     private final CommentMapper mapper;
     @Autowired
@@ -32,7 +32,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     @Override
     public Optional<ComentarioDTO> findCommentById(int commentId) {
         return comentarioRepository.findById(commentId)
-                .map(mapper::toComment);
+                .map(mapper::toCommentDTO);
     }
 
     @Override
@@ -50,63 +50,69 @@ public class ComentarioServiceImpl implements ComentarioService {
         return mapper.toComments(comentarioRepository.findByEstado(state));
     }
 
-@Override
-public ComentarioDTO createComment(ComentarioDTO comment) {
-    // Si no se recibe fecha desde el DTO, establecer la fecha actual
-    if (comment.getDate() == null) {
-        comment.setDate(LocalDateTime.now());
+    @Override
+    public ComentarioDTO createComment(ComentarioDTO comment) {
+        // Si no se recibe fecha desde el DTO, establecer la fecha actual
+        if (comment.getDate() == null) {
+            comment.setDate(LocalDateTime.now());
+        }
+
+        ComentarioEntity comentario = mapper.toComentarioEntity(comment);
+        comentario.setIdComentario(null); // Asegurar que se genera nuevo ID
+
+        return mapper.toCommentDTO(comentarioRepository.save(comentario));
     }
-
-    ComentarioEntity comentario = mapper.toComentario(comment);
-    comentario.setIdComentario(null); // Asegurar que se genera nuevo ID
-
-    return mapper.toComment(comentarioRepository.save(comentario));
-}
-
-
-@Override
-public void updateComment(int commentId, ComentarioDTO comment) {
-    ComentarioEntity comentarioEncontrado = comentarioRepository.findById(commentId)
-        .orElseThrow(() -> new RuntimeException("Comentario no encontrado"));
-
-    // Verificar si hubo cambios relevantes
-    boolean contentChanged = false;
-
-    if (!comentarioEncontrado.getDescripcion().equals(comment.getDescription())) {
-        comentarioEncontrado.setDescripcion(comment.getDescription());
-        contentChanged = true;
-    }
-
-    if (!comentarioEncontrado.getIdUsuario().equals(comment.getUserId())) {
-        comentarioEncontrado.setIdUsuario(comment.getUserId());
-        contentChanged = true;
-    }
-
-    if (!comentarioEncontrado.getIdAvance().equals(comment.getAdvanceId())) {
-        comentarioEncontrado.setIdAvance(comment.getAdvanceId());
-        contentChanged = true;
-    }
-
-    if (!comentarioEncontrado.getEstado().equals(comment.getState())) {
-        comentarioEncontrado.setEstado(comment.getState());
-        contentChanged = true;
-    }
-
-    // Si hubo cambios, actualizar la fecha
-    if (contentChanged) {
-        comentarioEncontrado.setFecha(LocalDateTime.now());
-    } else if (comment.getDate() != null) {
-        comentarioEncontrado.setFecha(comment.getDate());
-    }
-
-    comentarioRepository.save(comentarioEncontrado);
-}
-
 
     @Override
-    public void deleteComment(int commentId) {
-        ComentarioEntity comentarioEncontrado = comentarioRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comentario no encontrado"));
-        comentarioRepository.delete(comentarioEncontrado);
+    public Optional<ComentarioDTO> updateComment(int commentId, ComentarioDTO comment) {
+        Optional<ComentarioEntity> optionalComentario = comentarioRepository.findById(commentId);
+
+        if (optionalComentario.isEmpty()) {
+            return Optional.empty();
+        }
+
+        ComentarioEntity comentarioEncontrado = optionalComentario.get();
+        boolean contentChanged = false;
+
+        if (!comentarioEncontrado.getDescripcion().equals(comment.getDescription())) {
+            comentarioEncontrado.setDescripcion(comment.getDescription());
+            contentChanged = true;
+        }
+
+        if (!comentarioEncontrado.getIdUsuario().equals(comment.getUserId())) {
+            comentarioEncontrado.setIdUsuario(comment.getUserId());
+            contentChanged = true;
+        }
+
+        if (!comentarioEncontrado.getIdAvance().equals(comment.getAdvanceId())) {
+            comentarioEncontrado.setIdAvance(comment.getAdvanceId());
+            contentChanged = true;
+        }
+
+        if (!comentarioEncontrado.getEstado().equals(comment.getState())) {
+            comentarioEncontrado.setEstado(comment.getState());
+            contentChanged = true;
+        }
+
+        if (contentChanged) {
+            comentarioEncontrado.setFecha(LocalDateTime.now());
+        } else if (comment.getDate() != null) {
+            comentarioEncontrado.setFecha(comment.getDate());
+        }
+
+        ComentarioEntity updatedEntity = comentarioRepository.save(comentarioEncontrado);
+
+        return Optional.of(mapper.toCommentDTO(updatedEntity)); // Usa tu mapper para convertir a DTO
     }
+
+    @Override
+    public boolean deleteComment(int commentId) {
+        if (!comentarioRepository.existsById(commentId)) {
+            return false;
+        }
+
+        comentarioRepository.deleteById(commentId);
+        return true;
+    }
+
 }

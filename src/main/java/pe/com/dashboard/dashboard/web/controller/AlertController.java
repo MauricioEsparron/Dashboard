@@ -11,6 +11,7 @@ import pe.com.dashboard.dashboard.domain.service.AlertService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/alerts")
@@ -57,24 +58,21 @@ public class AlertController {
     @PutMapping("/{id}")
     public ResponseEntity<AlertaDTO> updateAlert(@PathVariable Integer id, @RequestBody AlertaDTO alertaDTO) {
         try {
-            AlertaDTO updatedAlert = alertService.update(id, alertaDTO);
-            if (updatedAlert != null) {
-                return new ResponseEntity<>(updatedAlert, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            Optional<AlertaDTO> updatedAlert = alertService.update(id, alertaDTO);
+            return updatedAlert.map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlert(@PathVariable Integer id) {
         try {
-            alertService.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+           boolean deleted = alertService.delete(id);
+            return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
