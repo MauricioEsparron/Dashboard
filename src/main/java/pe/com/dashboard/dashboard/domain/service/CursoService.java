@@ -13,7 +13,7 @@ public interface CursoService {
 
     Optional<CursoDTO> findCourseById(Integer courseId);
 
-    List<CursoDTO> findCourseByState(Integer state);
+    List<CursoDTO> findCourseByState(int state);
 
     List<CursoDTO> findCourseByProfessorId(Integer professorId);
 

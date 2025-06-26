@@ -13,7 +13,7 @@ import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { CourseStateMapper.class })
 public interface CursoMapper {
 
     @Mappings({
@@ -31,7 +31,8 @@ public interface CursoMapper {
             @Mapping(source = "profesor", target = "professorFirstName", qualifiedByName = "mapProfesorNombres"),
             @Mapping(source = "profesor", target = "professorLastName", qualifiedByName = "mapProfesorApellidos"),
             @Mapping(source = "profesor", target = "professorFullName", qualifiedByName = "mapProfesorNombreCompleto"),
-            @Mapping(source = "estado", target = "state"),
+            @Mapping(source = "estadoCurso", target = "courseState"),
+            @Mapping(source = "idEstadoCurso", target = "courseStateId"),
             @Mapping(source = "fechaInicio", target = "startDate"),
             @Mapping(source = "fechaFin", target = "endDate"),
             @Mapping(source = "accesoRestringido", target = "restrictedAccess"),
@@ -49,6 +50,7 @@ public interface CursoMapper {
     @Mapping(target = "inscripciones", ignore = true)
     @Mapping(target = "accesoRestringido", source = "restrictedAccess")
     @Mapping(source = "typeUserId", target = "tipoUsuarioEntity", qualifiedByName = "mapTypeUserIdToTipoUsuarioEntity")
+
     CursoEntity toCurso(CursoDTO cursoDTO);
 
     @Named("mapTypeUserIdToTipoUsuarioEntity")

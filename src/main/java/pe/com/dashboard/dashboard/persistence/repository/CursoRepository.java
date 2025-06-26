@@ -10,10 +10,11 @@ import pe.com.dashboard.dashboard.persistence.model.entity.CursoEntity;
 
 @Repository
 public interface CursoRepository extends JpaRepository<CursoEntity, Integer> {
-    List<CursoEntity> findByEstado(Integer estado);
 
     List<CursoEntity> findByProfesor_IdUsuario(Integer idUsuario);
 
     @Query("SELECT c FROM CursoEntity c LEFT JOIN FETCH c.inscripciones")
     List<CursoEntity> findAllWithInscripciones();
+
+    List<CursoEntity> findByEstadoCursoIdEstadoCurso(int idEstadoCurso);
 }

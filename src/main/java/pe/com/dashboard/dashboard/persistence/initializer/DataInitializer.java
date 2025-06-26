@@ -15,6 +15,7 @@
 // import pe.com.dashboard.dashboard.persistence.model.entity.CursoEntity;
 // import
 // pe.com.dashboard.dashboard.persistence.model.entity.EstadoAvanceTesisEntity;
+// import pe.com.dashboard.dashboard.persistence.model.entity.EstadoCursoEntity;
 // import
 // pe.com.dashboard.dashboard.persistence.model.entity.EstadoPersonaEntity;
 // import
@@ -25,6 +26,8 @@
 // import pe.com.dashboard.dashboard.persistence.repository.CursoRepository;
 // import
 // pe.com.dashboard.dashboard.persistence.repository.EstadoAvanceTesisRepository;
+// import
+// pe.com.dashboard.dashboard.persistence.repository.EstadoCursoRepository;
 // import
 // pe.com.dashboard.dashboard.persistence.repository.EstadoPersonaRepository;
 // import
@@ -57,6 +60,9 @@
 
 // @Autowired
 // private EstadoAvanceTesisRepository estadoAvanceTesisRepository;
+
+// @Autowired
+// private EstadoCursoRepository estadoCursoRepository;
 
 // @Autowired
 // private CursoRepository cursoRepository;
@@ -215,6 +221,18 @@
 // estadoAvanceTesisRepository.saveAll(List.of(estadoTesis1, estadoTesis2,
 // estadoTesis3, estadoTesis4));
 
+// EstadoCursoEntity estadoCurso1 = new EstadoCursoEntity();
+// estadoCurso1.setDescripcion("Activo");
+
+// EstadoCursoEntity estadoCurso2 = new EstadoCursoEntity();
+// estadoCurso2.setDescripcion("En Mantenimiento");
+
+// EstadoCursoEntity estadoCurso3 = new EstadoCursoEntity();
+// estadoCurso3.setDescripcion("Inactivo");
+
+// estadoCursoRepository.saveAll(List.of(estadoCurso1, estadoCurso2,
+// estadoCurso3));
+
 // try {
 // Path uploadsDir =
 // Paths.get("src/main/resources/static/uploads/curso").toAbsolutePath().normalize();
@@ -238,7 +256,7 @@
 // curso1.setRutaArchivo(imagePath1.toString());
 // curso1.setUrlPublica("/uploads/curso/curso1.jpg");
 // curso1.setAccesoRestringido(1);
-// curso1.setEstado(1);
+// curso1.setEstadoCurso(estadoCurso1);
 // curso1.setFechaInicio(LocalDateTime.now());
 // curso1.setFechaFin(LocalDateTime.now().plusMonths(1));
 // curso1.setProfesor(user4);
@@ -263,7 +281,7 @@
 // curso2.setRutaArchivo(imagePath2.toString());
 // curso2.setUrlPublica("/uploads/curso/curso2.jpg");
 // curso2.setAccesoRestringido(1);
-// curso2.setEstado(1);
+// curso2.setEstadoCurso(estadoCurso2);
 // curso2.setFechaInicio(LocalDateTime.now());
 // curso2.setFechaFin(LocalDateTime.now().plusMonths(1));
 // curso2.setProfesor(user4);
@@ -288,7 +306,7 @@
 // curso3.setRutaArchivo(imagePath3.toString());
 // curso3.setUrlPublica("/uploads/curso/curso3.jpg");
 // curso3.setAccesoRestringido(1);
-// curso3.setEstado(1);
+// curso3.setEstadoCurso(estadoCurso3);
 // curso3.setFechaInicio(LocalDateTime.now());
 // curso3.setFechaFin(LocalDateTime.now().plusMonths(1));
 // curso3.setProfesor(user4);

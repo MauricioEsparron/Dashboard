@@ -1,5 +1,6 @@
 package pe.com.dashboard.dashboard.domain.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -12,10 +13,12 @@ import pe.com.dashboard.dashboard.domain.dto.CursoDTO;
 import pe.com.dashboard.dashboard.domain.service.CursoService;
 import pe.com.dashboard.dashboard.persistence.mapper.CursoMapper;
 import pe.com.dashboard.dashboard.persistence.model.entity.CursoEntity;
+import pe.com.dashboard.dashboard.persistence.model.entity.EstadoCursoEntity;
 import pe.com.dashboard.dashboard.persistence.model.entity.InscripcionEntity;
 import pe.com.dashboard.dashboard.persistence.model.entity.TipoUsuarioEntity;
 import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 import pe.com.dashboard.dashboard.persistence.repository.CursoRepository;
+import pe.com.dashboard.dashboard.persistence.repository.EstadoCursoRepository;
 import pe.com.dashboard.dashboard.persistence.repository.InscripcionRepository;
 import pe.com.dashboard.dashboard.persistence.repository.TipoUsuarioRepository;
 import pe.com.dashboard.dashboard.persistence.repository.UsuarioRepository;
@@ -46,6 +49,9 @@ public class CursoServiceImpl implements CursoService {
     private final TipoUsuarioRepository tipoUsuarioRepository;
     private final InscripcionRepository inscripcionRepository;
 
+    @Autowired
+    private EstadoCursoRepository estadoCursoRepository;
+
     @Override
     public List<CursoDTO> findAllCourses() {
         return mapper.toCursos(cursoRepository.findAll());
@@ -57,8 +63,8 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public List<CursoDTO> findCourseByState(Integer state) {
-        return mapper.toCursos(cursoRepository.findByEstado(state));
+    public List<CursoDTO> findCourseByState(int state) {
+        return mapper.toCursos(cursoRepository.findByEstadoCursoIdEstadoCurso(state));
     }
 
     @Override
@@ -107,7 +113,10 @@ public class CursoServiceImpl implements CursoService {
                 .orElseThrow(() -> new RuntimeException("Tipo de usuario no encontrado"));
         cursoEncontrado.setTipoUsuarioEntity(tipoUsuario);
 
-        cursoEncontrado.setEstado(course.getState());
+        EstadoCursoEntity estadoCurso = estadoCursoRepository.findById(course.getCourseStateId())
+                .orElseThrow(() -> new RuntimeException("Estado curso no encontrado"));
+        cursoEncontrado.setEstadoCurso(estadoCurso);
+
         cursoEncontrado.setFechaInicio(course.getStartDate());
         cursoEncontrado.setFechaFin(course.getEndDate());
 

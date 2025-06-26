@@ -70,8 +70,9 @@ public class CursoEntity {
     @Column(nullable = false)
     private Integer accesoRestringido;
 
-    @Column(nullable = false)
-    private Integer estado;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_estado_curso")
+    private EstadoCursoEntity estadoCurso;
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<InscripcionEntity> inscripciones;
@@ -79,5 +80,9 @@ public class CursoEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_usuario")
     private TipoUsuarioEntity tipoUsuarioEntity;
+
+    public Integer getIdEstadoCurso() {
+        return estadoCurso != null ? estadoCurso.getIdEstadoCurso() : null;
+    }
 
 }
