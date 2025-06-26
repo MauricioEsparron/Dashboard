@@ -14,5 +14,6 @@ public class PersonaDTO {
     private String dni;
     private String mail;
     private String address;
-    private Integer state;
+    private Integer personStateId;
+    private EstadoPersonaDTO personState;
 }

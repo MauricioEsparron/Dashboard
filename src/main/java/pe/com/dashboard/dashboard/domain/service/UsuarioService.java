@@ -8,18 +8,18 @@ import pe.com.dashboard.dashboard.persistence.model.entity.UsuarioEntity;
 
 public interface UsuarioService {
 
-List<UsuarioDTO> findAllUsers();
+    List<UsuarioDTO> findAllUsers();
 
-Optional<UsuarioEntity> findUserById(int userId);
+    Optional<UsuarioEntity> findUserById(int userId);
 
-List<UsuarioDTO> findByState(int estado);
+    List<UsuarioDTO> findByState(int estado);
 
-List<UsuarioDTO> findTypeUser(int userType);
+    List<UsuarioDTO> findTypeUser(int userType);
 
-UsuarioDTO createUser(UsuarioDTO user);
+    UsuarioDTO createUser(UsuarioDTO user);
 
-void updateUser(int userId, UsuarioDTO user);
+    void updateUser(int userId, UsuarioDTO user);
 
-void deleteUser(int userId);
+    void deleteUser(int userId);
 
 }

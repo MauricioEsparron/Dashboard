@@ -1,16 +1,13 @@
 package pe.com.dashboard.dashboard.domain.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import pe.com.dashboard.dashboard.domain.dto.CursoDTO;
 import pe.com.dashboard.dashboard.domain.service.CursoService;
 import pe.com.dashboard.dashboard.persistence.mapper.CursoMapper;
@@ -23,24 +20,31 @@ import pe.com.dashboard.dashboard.persistence.repository.InscripcionRepository;
 import pe.com.dashboard.dashboard.persistence.repository.TipoUsuarioRepository;
 import pe.com.dashboard.dashboard.persistence.repository.UsuarioRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CursoServiceImpl implements CursoService {
 
-    @Autowired
-    private CursoMapper mapper;
+    @Value("${app.upload.curso.dir}")
+    private String uploadDir;
 
-    @Autowired
-    private CursoRepository cursoRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private TipoUsuarioRepository tipoUsuarioRepository;
-
-    @Autowired
-    private InscripcionRepository inscripcionRepository;
+    private final CursoMapper mapper;
+    private final CursoRepository cursoRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final TipoUsuarioRepository tipoUsuarioRepository;
+    private final InscripcionRepository inscripcionRepository;
 
     @Override
     public List<CursoDTO> findAllCourses() {
@@ -62,28 +66,19 @@ public class CursoServiceImpl implements CursoService {
         return mapper.toCursos(cursoRepository.findByProfesor_IdUsuario(professorId));
     }
 
-    public List<CursoDTO> findCursosConConteo() {
-        List<CursoEntity> cursos = cursoRepository.findAllWithInscripciones();
-        return mapper.toCursos(cursos);
-    }
-
     @Override
-
     public CursoDTO createCourse(CursoDTO course) {
-        // 1. Validación de fechas
         if (course.getStartDate().isAfter(course.getEndDate())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "La fecha de inicio debe ser anterior a la fecha fin");
         }
 
-        // 2. Cargar entidades completas con fetch JOIN
         UsuarioEntity profesor = usuarioRepository.findByIdWithPersona(course.getProfessorId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profesor no encontrado"));
 
         TipoUsuarioEntity tipoUsuario = tipoUsuarioRepository.findById(course.getTypeUserId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tipo de usuario no encontrado"));
 
-        // 3. Crear y guardar
         CursoEntity curso = mapper.toCurso(course);
         curso.setProfesor(profesor);
         curso.setTipoUsuarioEntity(tipoUsuario);
@@ -110,7 +105,7 @@ public class CursoServiceImpl implements CursoService {
 
         TipoUsuarioEntity tipoUsuario = tipoUsuarioRepository.findById(course.getTypeUserId())
                 .orElseThrow(() -> new RuntimeException("Tipo de usuario no encontrado"));
-        cursoEncontrado.setTipoUsuarioEntity(tipoUsuario); // Cambiado de setTipoUsuarioEntity a setTipoUsuario
+        cursoEncontrado.setTipoUsuarioEntity(tipoUsuario);
 
         cursoEncontrado.setEstado(course.getState());
         cursoEncontrado.setFechaInicio(course.getStartDate());
@@ -126,33 +121,76 @@ public class CursoServiceImpl implements CursoService {
         cursoRepository.delete(cursoEncontrado);
     }
 
-@Override
-public void enrollStudentToCourse(Integer cursoId, Integer usuarioId) {
-    // 1. Verificar existencia del curso
-    CursoEntity curso = cursoRepository.findById(cursoId)
-        .orElseThrow(() -> new EntityNotFoundException("No existe el curso con ID: " + cursoId));
-    
-    // 2. Cargar usuario CON su tipo de usuario
-    UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
-        .orElseThrow(() -> new EntityNotFoundException("No existe el usuario con ID: " + usuarioId));
-    
-    // 3. Validar que sea estudiante (verifica el nombre exacto en tu BD)
-    if (usuario.getTipoUsuario() == null || 
-        !"ESTUDIANTE".equalsIgnoreCase(usuario.getTipoUsuario().getDescripcion())) {
-        throw new SecurityException("El usuario con ID " + usuarioId + " no tiene rol de ESTUDIANTE");
+    @Override
+    public void enrollStudentToCourse(Integer cursoId, Integer usuarioId) {
+        CursoEntity curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new EntityNotFoundException("No existe el curso con ID: " + cursoId));
+
+        UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new EntityNotFoundException("No existe el usuario con ID: " + usuarioId));
+
+        if (usuario.getTipoUsuario() == null ||
+                !"ESTUDIANTE".equalsIgnoreCase(usuario.getTipoUsuario().getDescripcion())) {
+            throw new SecurityException("El usuario con ID " + usuarioId + " no tiene rol de ESTUDIANTE");
+        }
+
+        if (inscripcionRepository.existsByCurso_IdCursoAndEstudiante_IdUsuario(cursoId, usuarioId)) {
+            throw new IllegalStateException("El usuario ya está inscrito en este curso");
+        }
+
+        InscripcionEntity inscripcion = new InscripcionEntity();
+        inscripcion.setCurso(curso);
+        inscripcion.setEstudiante(usuario);
+        inscripcion.setFechaInscripcion(LocalDateTime.now());
+        inscripcion.setAccesoPermitido(true);
+
+        inscripcionRepository.save(inscripcion);
     }
-    
-    // 4. Verificar si ya está inscrito
-    if (inscripcionRepository.existsByCurso_IdCursoAndEstudiante_IdUsuario(cursoId, usuarioId)) {
-        throw new IllegalStateException("El usuario ya está inscrito en este curso");
+
+    @Override
+    public CursoDTO saveCursoWithImage(CursoDTO cursoDTO, MultipartFile imagen) throws IOException {
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        String extension = obtenerExtension(imagen.getOriginalFilename());
+        String nombreSanitizado = cursoDTO.getDescription().trim().toLowerCase().replaceAll("[^a-z0-9]+", "-");
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String nombreArchivo = nombreSanitizado + "-" + timestamp + "." + extension;
+
+        Path filePath = uploadPath.resolve(nombreArchivo);
+        Files.copy(imagen.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        cursoDTO.setFileName(nombreArchivo);
+        cursoDTO.setTypeMime(imagen.getContentType());
+        cursoDTO.setSize(imagen.getSize());
+        cursoDTO.setFilePath(filePath.toString());
+        cursoDTO.setPublicUrl("/uploads/cursos/" + nombreArchivo);
+
+        return createCourse(cursoDTO);
     }
-    
-    // 5. Crear inscripción
-    InscripcionEntity inscripcion = new InscripcionEntity();
-    inscripcion.setCurso(curso);
-    inscripcion.setEstudiante(usuario);
-    inscripcion.setFechaInscripcion(LocalDateTime.now());
-    inscripcion.setAccesoPermitido(true); // O según tu lógica de negocio
-    
-    inscripcionRepository.save(inscripcion);
-}}
+
+    @Override
+    public Resource getImageResource(String nombreArchivo) throws IOException {
+        try {
+            Path filePath = Paths.get(uploadDir).resolve(nombreArchivo).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new IOException("No se pudo leer el archivo: " + nombreArchivo);
+            }
+        } catch (MalformedURLException ex) {
+            throw new IOException("Error al acceder al archivo: " + nombreArchivo, ex);
+        }
+    }
+
+    private String obtenerExtension(String nombreArchivo) {
+        if (nombreArchivo == null)
+            return "";
+        int lastDot = nombreArchivo.lastIndexOf('.');
+        return lastDot == -1 ? "" : nombreArchivo.substring(lastDot + 1);
+    }
+}

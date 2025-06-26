@@ -1,6 +1,8 @@
 package pe.com.dashboard.dashboard.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +14,13 @@ public class CursoDTO {
     private Integer idCourse;
     private String name;
     private String description;
-    private String imageUrl;
+    private String fileName;
+    private String typeMime;
+    private Long size;
+    private String filePath;
+    private String publicUrl;
+    @JsonIgnore
+    private String imgUrlBase64;
     private Integer professorId; // ID del profesor
     private String typeUserDescription; // Descripción del tipo de usuario
     private Integer typeUserId; // ✅ ID del tipo de usuario (necesario para actualizar)
@@ -21,9 +29,8 @@ public class CursoDTO {
     private String professorEmail;
     private String professorFirstName;
     private String professorLastName;
-    private String professorFullName;    
+    private String professorFullName;
     private Integer studentCount;
-
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startDate;

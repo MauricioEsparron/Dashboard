@@ -4,18 +4,19 @@ import java.util.List;
 import java.util.Optional;
 
 import pe.com.dashboard.dashboard.domain.dto.PersonaDTO;
+import pe.com.dashboard.dashboard.persistence.model.entity.PersonaEntity;
 
 public interface PersonaService {
 
     List<PersonaDTO> findAllPersons();
 
-    Optional<PersonaDTO> findPersonById(int personId);
+    Optional<PersonaEntity> findPersonById(int personId);
 
     List<PersonaDTO> findPersonByAge(int age);
 
     List<PersonaDTO> findPersonByAddress(String address);
 
-    List<PersonaDTO> findPersonByActive (Integer state);
+    List<PersonaDTO> findPersonByState(int estado);
 
     PersonaDTO createPerson(PersonaDTO person);
 

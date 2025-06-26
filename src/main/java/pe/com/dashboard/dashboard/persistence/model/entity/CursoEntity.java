@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,8 +39,23 @@ public class CursoEntity {
     @Column(length = 500)
     private String descripcion;
 
-    @Column(name = "imagen_url", length = 255)
-    private String imagenUrl;
+    @Column(name = "nombre_archivo", length = 150, nullable = true)
+    private String nombreArchivo;
+
+    @Column(name = "tipo_mime", length = 50, nullable = true)
+    private String tipoMime;
+
+    @Column(name = "tamanio", nullable = true)
+    private Long tamanio;
+
+    @Column(name = "ruta_archivo", length = 255, nullable = true)
+    private String rutaArchivo;
+
+    @Column(name = "url_publica", length = 255, nullable = true)
+    private String urlPublica;
+
+    @Transient
+    private String imageUrlBase64;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profesor", nullable = false)
@@ -59,7 +75,7 @@ public class CursoEntity {
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<InscripcionEntity> inscripciones;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_usuario")
     private TipoUsuarioEntity tipoUsuarioEntity;

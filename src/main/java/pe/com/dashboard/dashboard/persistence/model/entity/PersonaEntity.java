@@ -5,9 +5,12 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -16,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table (name = "persona")
+@Table(name = "persona")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,30 +27,36 @@ import lombok.Setter;
 public class PersonaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "id_persona")
+    @Column(name = "id_persona")
     private Integer idPersona;
-    
-    @Column (name = "nombres")
+
+    @Column(name = "nombres")
     private String nombre;
 
-    @Column (name = "apellidos")
+    @Column(name = "apellidos")
     private String apellido;
-    
+
     private String telefono;
-    
+
     private Integer edad;
-    
+
     @Column(nullable = false, length = 8)
     private String dni;
-    
+
     @Column(nullable = false, length = 100)
     private String correo;
-    
+
     @Column(nullable = false, length = 150)
     private String direccion;
 
-    private Integer estado;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_estado_persona")
+    private EstadoPersonaEntity estadoPersona;
 
-    @OneToMany (mappedBy = "persona", cascade = CascadeType.ALL, orphanRemoval = true )
-    private List <UsuarioEntity> usuarios;
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UsuarioEntity> usuarios;
+
+    public Integer getIdEstadoPersona() {
+        return estadoPersona != null ? estadoPersona.getIdEstadoPersona() : null;
+    }
 }
