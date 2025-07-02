@@ -11,9 +11,15 @@ public interface InscripcionService {
 
     Optional<InscripcionDTO> findInscriptionById(Integer id);
 
+    List<InscripcionDTO> findInscriptionsByStudentId(Integer studentId);
+
+    List<InscripcionDTO> findInscriptionsByCourseId(Integer courseId);
+
+    void enrollStudentToCourse(Integer cursoId, Integer usuarioId);
+
     InscripcionDTO createInscription(InscripcionDTO inscripcion);
 
     void updateInscription(int inscripcionId, InscripcionDTO inscripcion);
 
     void deleteInscription(int inscripcionId);
-} 
+}

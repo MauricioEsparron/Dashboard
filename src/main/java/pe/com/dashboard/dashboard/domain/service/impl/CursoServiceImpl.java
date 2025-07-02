@@ -47,7 +47,6 @@ public class CursoServiceImpl implements CursoService {
     private final CursoRepository cursoRepository;
     private final UsuarioRepository usuarioRepository;
     private final TipoUsuarioRepository tipoUsuarioRepository;
-    private final InscripcionRepository inscripcionRepository;
 
     @Autowired
     private EstadoCursoRepository estadoCursoRepository;
@@ -128,32 +127,6 @@ public class CursoServiceImpl implements CursoService {
         CursoEntity cursoEncontrado = cursoRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
         cursoRepository.delete(cursoEncontrado);
-    }
-
-    @Override
-    public void enrollStudentToCourse(Integer cursoId, Integer usuarioId) {
-        CursoEntity curso = cursoRepository.findById(cursoId)
-                .orElseThrow(() -> new EntityNotFoundException("No existe el curso con ID: " + cursoId));
-
-        UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new EntityNotFoundException("No existe el usuario con ID: " + usuarioId));
-
-        if (usuario.getTipoUsuario() == null ||
-                !"ESTUDIANTE".equalsIgnoreCase(usuario.getTipoUsuario().getDescripcion())) {
-            throw new SecurityException("El usuario con ID " + usuarioId + " no tiene rol de ESTUDIANTE");
-        }
-
-        if (inscripcionRepository.existsByCurso_IdCursoAndEstudiante_IdUsuario(cursoId, usuarioId)) {
-            throw new IllegalStateException("El usuario ya está inscrito en este curso");
-        }
-
-        InscripcionEntity inscripcion = new InscripcionEntity();
-        inscripcion.setCurso(curso);
-        inscripcion.setEstudiante(usuario);
-        inscripcion.setFechaInscripcion(LocalDateTime.now());
-        inscripcion.setAccesoPermitido(true);
-
-        inscripcionRepository.save(inscripcion);
     }
 
     @Override

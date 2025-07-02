@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import pe.com.dashboard.dashboard.domain.dto.CursoDTO;
 import pe.com.dashboard.dashboard.domain.service.CursoService;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,28 +53,4 @@ public class CursoController {
     public void deleteCourse(@PathVariable("id") int courseId) {
         cursoService.deleteCourse(courseId);
     }
-
-@PostMapping("/{cursoId}/inscribir/{usuarioId}")
-public ResponseEntity<?> inscribirEstudiante(
-        @PathVariable Integer cursoId,
-        @PathVariable Integer usuarioId) {
-    
-    try {
-        cursoService.enrollStudentToCourse(cursoId, usuarioId);
-        return ResponseEntity.ok().body(
-            Map.of("success", true, "message", "Inscripción exitosa")
-        );
-    } catch (EntityNotFoundException e) {
-        return ResponseEntity.status(404).body(
-            Map.of("success", false, "error", e.getMessage())
-        );
-    } catch (SecurityException e) {
-        return ResponseEntity.status(403).body(
-            Map.of("success", false, "error", e.getMessage())
-        );
-    } catch (IllegalStateException e) {
-        return ResponseEntity.status(409).body(
-            Map.of("success", false, "error", e.getMessage())
-        );
-    }
-}}
+}

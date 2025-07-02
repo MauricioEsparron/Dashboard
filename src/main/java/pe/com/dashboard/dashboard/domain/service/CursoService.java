@@ -23,8 +23,6 @@ public interface CursoService {
 
     void deleteCourse(int courseId);
 
-    void enrollStudentToCourse(Integer cursoId, Integer usuarioId);
-
     CursoDTO saveCursoWithImage(CursoDTO cursoDTO, MultipartFile imagen) throws IOException;
 
     Resource getImageResource(String nombreArchivo) throws IOException;
